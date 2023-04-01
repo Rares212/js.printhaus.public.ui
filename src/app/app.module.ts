@@ -1,18 +1,24 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import {NutCommonModule} from "./common/nut-common.module";
+import {DashboardModule} from "./dashboard/dashboard.module";
+import {TUI_ICONS_PATH, TUI_SANITIZER, tuiIconsPathFactory} from "@taiga-ui/core";
+import {NgDompurifySanitizer} from "@tinkoff/ng-dompurify";
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule
+    DashboardModule,
+    NutCommonModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: TUI_SANITIZER,
+      useValue: NgDompurifySanitizer
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
