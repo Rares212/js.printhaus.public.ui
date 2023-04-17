@@ -1,1 +1,23 @@
-<nut-toolbar></nut-toolbar>
+<nut-toolbar class="fixed-top"></nut-toolbar>
+
+<ng-particles
+  id="background"
+  [url]="particleConfigPath"
+  [particlesInit]="particlesInit">
+
+</ng-particles>
+
+<section class="fullscreen">
+  <nut-dashboard-intro class="w-100 h-100" styleClass="w-100 h-100"></nut-dashboard-intro>
+</section>
+
+
+<section class="fullscreen container" data-aos="fade-down">
+  <div class="row justify-content-center w-100">
+    <nut-stl-viewer class="col col-md-12 col-lg-6"></nut-stl-viewer>
+  </div>
+</section>
+
+
+
+

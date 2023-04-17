@@ -1,0 +1,91 @@
+<tui-island [class]="styleClass + ' subtle-shadow'">
+  <p class="tui-island__title text-center">Load your own model (STL)</p>
+
+  <tui-input-files class="p-2"
+                   *ngIf="!stlFileControl.value"
+                   [formControl]="stlFileControl"
+
+                   [accept]="ACCEPTS_HEADER"
+                   (reject)="onReject($event)">
+    <ng-template let-dragged>
+      <div *ngIf="dragged; else base"
+           class="content">
+        <tui-marker-icon
+          mode="link"
+          src="tuiIconArrowDownLarge">
+        </tui-marker-icon>
+        <div>Drop your file and let's get started!</div>
+      </div>
+      <ng-template #base>
+        <div class="content">
+          <tui-marker-icon
+            mode="link"
+            src="tuiIconUploadCloudLarge"
+          ></tui-marker-icon>
+          <div>
+            Drag and drop file here or
+            <a tuiLink>click to upload</a>
+          </div>
+        </div>
+      </ng-template>
+    </ng-template>
+  </tui-input-files>
+
+  <tui-files class="p-1">
+    <tui-file
+      *ngIf="loadedFile$ | async as file"
+      state="normal"
+      [file]="file"
+      [showDelete]="stlFileControl.enabled"
+      (removed)="removeFile()"
+    ></tui-file>
+
+    <tui-file
+      *ngIf="rejectedFile$ | async as file"
+      state="error"
+      [file]="file"
+      [showDelete]="stlFileControl.enabled"
+      (removed)="clearRejected()"
+    ></tui-file>
+  </tui-files>
+  <tui-loader [overlay]="true"
+              [inheritColor]="true"
+              [showLoader]="(loadingFile$ | async | tuiIsPresent)">
+    <stl-model-viewer #modelViewer class="fixed-aspect-ratio border-1"
+                      [stlModels]="[]"
+                      [camera]="camera"
+                      [controls]="controls">
+    </stl-model-viewer>
+  </tui-loader>
+
+  <tui-accordion class="container">
+    <tui-accordion-item>
+      <i class="bi bi-gear"></i>
+      Settings
+      <ng-template tuiAccordionItemContent>
+        <div class="d-flex flex-row justify-content-center">
+          <form tuiGroup class="settings-container w-100" [formGroup]="settingsForm">
+            <div class="container row">
+              <div class="col">
+                <tui-input-slider [min]="0" [max]="100" [steps]="120" [quantum]="0.1"
+                                  [formControlName]=FIELDS.FOV>
+                  FOV
+                </tui-input-slider>
+              </div>
+
+              <div class="col">
+                <tui-checkbox-block [formControlName]="FIELDS.SHADOWS"
+                                    size="l" contentAlign="right">
+                  Shadows
+                </tui-checkbox-block>
+              </div>
+            </div>
+          </form>
+        </div>
+      </ng-template>
+    </tui-accordion-item>
+  </tui-accordion>
+
+</tui-island>
+
+
