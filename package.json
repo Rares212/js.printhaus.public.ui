@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "dev": "yarn run start --open",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -39,11 +39,12 @@
     "@taiga-ui/styles": "^3.16.0",
     "@tinkoff/ng-dompurify": "3.0.0",
     "@types/three": "^0.150.0",
-    "angular-stl-model-viewer": "^7.0.0",
     "aos": "^2.3.4",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
+    "class-validator": "^0.14.0",
     "dompurify": "2.2.9",
+    "fflate": "^0.7.4",
     "ng-particles": "^3.9.3",
     "ngx-page-scroll": "^10.0.0",
     "ngx-page-scroll-core": "^10.0.0",

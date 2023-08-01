@@ -1,0 +1,56 @@
+<form [formGroup]="printForm">
+  <tui-island [class]="styleClass + ' subtle-shadow'">
+    <p class="tui-island__title text-center">Load your own model (STL)</p>
+
+    <tui-input-files class="p-2"
+                     *ngIf="!printForm.get(FIELDS.FILE)!.value"
+                     [formControlName]="FIELDS.FILE"
+                     [accept]="ACCEPTS_HEADER"
+                     (reject)="onReject($event)"
+                     [maxFileSize]="maxFileSize">
+    </tui-input-files>
+
+    <tui-files class="p-1">
+      <tui-file
+        *ngIf="loadedFile$ | async as file"
+        state="normal"
+        [file]="file"
+        [showDelete]="printForm.get(FIELDS.FILE)!.enabled"
+        (removed)="removeFile()"
+      ></tui-file>
+
+      <tui-file
+        *ngIf="rejectedFile$ | async as file"
+        state="error"
+        [file]="file"
+        [showDelete]="printForm.get(FIELDS.FILE)!.enabled"
+        (removed)="clearRejected()"
+      ></tui-file>
+    </tui-files>
+
+    <tui-loader [overlay]="true"
+                [inheritColor]="true"
+                [showLoader]="(loadingFile$ | async | tuiIsPresent)">
+      <haus-model-viewer [mesh]="loadedMesh$ | async">
+      </haus-model-viewer>
+    </tui-loader>
+
+
+    <form tuiGroup class="settings-container w-100" [formGroup]="printForm">
+      <div class="container row">
+        <div class="col">
+
+        </div>
+
+        <div class="col">
+
+        </div>
+      </div>
+    </form>
+
+
+  </tui-island>
+</form>
+
+
+

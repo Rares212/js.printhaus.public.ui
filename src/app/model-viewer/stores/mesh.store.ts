@@ -21,24 +21,25 @@ import {MeshProcessingService} from "../services/mesh-processing.service";
 })
 export class MeshStore {
 
-  private _meshFile: BehaviorSubject<TuiFileLike | null> = new BehaviorSubject<TuiFileLike | null>(null);
-  private readonly $meshFile: Observable<TuiFileLike | null> = this._meshFile.asObservable().pipe(
-    distinctUntilChanged()
-  );
+  private _meshFile: Subject<TuiFileLike | null> = new BehaviorSubject<TuiFileLike | null>(null);
+  private readonly $meshFile: Observable<TuiFileLike | null> = this._meshFile.asObservable();
   private readonly $loadingMeshFile: Subject<TuiFileLike | null> = new Subject<TuiFileLike | null>();
   private readonly $mesh: Observable<Mesh | null> = this.$meshFile.pipe(
     switchMap(file => {
-      if (!file) {
+      if (!isNonNull(file)) {
         return of(null);
       }
 
       this.$loadingMeshFile.next(file);
       return this.meshProcessingService.parseFile(file).pipe(
-        finalize(() => this.$loadingMeshFile.next(null)),
-        tap(mesh => console.log(mesh))
+        finalize(() => this.$loadingMeshFile.next(null))
       );
     })
   );
+
+  constructor(private meshProcessingService: MeshProcessingService) {
+
+  }
 
   public setFile(file: TuiFileLike | null): void {
     this._meshFile.next(file)
@@ -54,9 +55,5 @@ export class MeshStore {
 
   public getMeshAsObservable(): Observable<Mesh | null> {
     return this.$mesh;
-  }
-
-  constructor(private meshProcessingService: MeshProcessingService) {
-
   }
 }

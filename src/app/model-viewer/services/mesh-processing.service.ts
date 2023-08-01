@@ -1,12 +1,31 @@
-import { Injectable } from '@angular/core';
-import {BufferGeometry, Loader, Material, Matrix4, Mesh, MeshPhongMaterial, MeshStandardMaterial, Vector3} from "three";
-import {from, map, Observable} from "rxjs";
+import {Injectable} from '@angular/core';
+import {
+  BufferGeometry,
+  Group,
+  Loader,
+  Material,
+  Matrix4,
+  Mesh,
+  MeshPhongMaterial,
+  MeshStandardMaterial, Object3D,
+  Vector3
+} from "three";
+import {from, map, Observable, switchMap} from "rxjs";
 import {STLLoader} from "three/examples/jsm/loaders/STLLoader";
 import {TuiFileLike} from "@taiga-ui/kit";
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
 import {getFileType, isNonNull} from "../../common/util/common.util";
-import {ConvexGeometry} from "three/examples/jsm/geometries/ConvexGeometry";
-import {DENSITY_MAP, MaterialType} from "../models/material-type.enum";
+import {
+  PrintModelDetailsRespDto,
+  PrintQuality,
+  PrintSettingsDto,
+  PrintStrength,
+  SupportedFileTypes
+} from '@printnuts/common';
+import {gzipSync} from "fflate"
+import {HttpClient} from "@angular/common/http";
+import {mergeBufferGeometries} from "three/examples/jsm/utils/BufferGeometryUtils";
+import {PrintModelDetailsReqDto} from "../models/print-model-details.req.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +34,8 @@ export class MeshProcessingService {
 
   public readonly ACCEPTED_FILE_TYPES: string[] = ['stl', 'obj']
   public readonly ACCEPTS_HEADER: string;
-  private stlLoader: STLLoader =  new STLLoader();
+  private stlLoader: STLLoader = new STLLoader();
   private objLoader: OBJLoader = new OBJLoader();
-  private middle: Vector3 = new Vector3();
 
   private defaultMaterial: Material = new MeshStandardMaterial({
     color: 0x808080, // gray color
@@ -25,7 +43,7 @@ export class MeshProcessingService {
     metalness: 0.1, // how metallic the surface appears (lower values mean less metallic)
   });
 
-  constructor() {
+  constructor(private httpClient: HttpClient) {
     this.ACCEPTS_HEADER = '';
     for (const fileType of this.ACCEPTED_FILE_TYPES) {
       this.ACCEPTS_HEADER += '.' + fileType + ',';
@@ -35,18 +53,19 @@ export class MeshProcessingService {
   public parseFile(file: TuiFileLike,
                    material: Material = this.defaultMaterial,
                    centered: boolean = true): Observable<Mesh> {
-    console.log(file);
 
     const fileType: string = getFileType(file.name)!;
     switch (fileType) {
-      case 'stl': {
+      case SupportedFileTypes.STL: {
         return from((file as File).arrayBuffer()).pipe(
-          map(buffer => this.meshFromBuffer(buffer, this.stlLoader, material!, centered))
+          map(buffer => this.parseStl(buffer)),
+          map(buffer => this.meshFromGeometry(buffer, material!, centered))
         );
       }
-      case 'obj': {
+      case SupportedFileTypes.OBJ: {
         return from((file as File).arrayBuffer()).pipe(
-          map(buffer => this.meshFromBuffer(buffer, this.objLoader, material!, centered))
+          map(buffer => this.parseObj(buffer)),
+          map(buffer => this.meshFromGeometry(buffer, material!, centered))
         );
       }
       default: {
@@ -55,19 +74,45 @@ export class MeshProcessingService {
     }
   }
 
-  private meshFromBuffer(buffer: ArrayBuffer, loader: Loader, material: Material, centered: boolean) {
-    let geometry: BufferGeometry = (loader as any).parse(buffer);
+  public sendTestRequest(file: TuiFileLike): Observable<PrintModelDetailsRespDto> {
+    return this.getModelDetails(file, '643b21fb63453139aefddf5d', {
+      quality: PrintQuality.NORMAL,
+      strength: PrintStrength.NORMAL
+    });
+  }
 
+  public getModelDetails(file: TuiFileLike, materialId: string, printSettings: PrintSettingsDto): Observable<PrintModelDetailsRespDto> {
+    const apiUrl = 'printnuts-api/print/model-details';
+
+    const fileType: SupportedFileTypes = getFileType(file.name)! as SupportedFileTypes;
+
+    return from((file as File).arrayBuffer()).pipe(
+      map(buffer => gzipSync(new Uint8Array(buffer))),
+
+      switchMap(buffer => {
+        const body = new PrintModelDetailsReqDto();
+        body.compressedMeshFile = new File([buffer], file.name, {type: 'application/gzip'});
+        body.fileType = fileType;
+        body.materialId = materialId;
+        body.printSettings = printSettings;
+
+        return this.httpClient.post<PrintModelDetailsRespDto>(apiUrl, body.toFormData());
+      })
+    );
+  }
+
+  private meshFromGeometry(geometry: BufferGeometry, material: Material, centered: boolean): Mesh {
     const mesh: Mesh = new Mesh(geometry, material);
 
     if (centered) {
+      let middle: Vector3 = new Vector3();
       geometry.computeBoundingBox()
-      geometry.boundingBox!.getCenter(this.middle);
+      geometry.boundingBox!.getCenter(middle);
       mesh.geometry.applyMatrix4(
         new Matrix4().makeTranslation(
-          -this.middle.x,
-          -this.middle.y,
-          -this.middle.z
+          -middle.x,
+          -middle.y,
+          -middle.z
         )
       );
     }
@@ -75,53 +120,25 @@ export class MeshProcessingService {
     return mesh;
   }
 
-
-
-  // Returns the mass in grams
-  private getMass(volume: number, materialType: MaterialType) {
-    return DENSITY_MAP[materialType] * volume;
+  private parseStl(buffer: ArrayBuffer): BufferGeometry {
+    return this.stlLoader.parse(buffer);
   }
 
-  // Returns the volume in cubic centimeters
-  private getVolume(geometry: BufferGeometry) {
-    if (!geometry.isBufferGeometry) {
-      console.log("'geometry' must be an indexed or non-indexed buffer geometry");
-      return 0;
-    }
-    let position = geometry.attributes['position'];
-    let sum = 0;
-    let p1 = new Vector3(),
-      p2 = new Vector3(),
-      p3 = new Vector3();
-    if (!isNonNull(geometry.index)) {
-      let faces = position.count / 3;
-      for (let i = 0; i < faces; i++) {
-        // @ts-ignore
-        p1.fromBufferAttribute(position, i * 3 + 0);
-        // @ts-ignore
-        p2.fromBufferAttribute(position, i * 3 + 1);
-        // @ts-ignore
-        p3.fromBufferAttribute(position, i * 3 + 2);
-        sum += this.signedVolumeOfTriangle(p1, p2, p3);
+  private parseObj(buffer: ArrayBuffer): BufferGeometry {
+    const group: Group = this.objLoader.parse(new Uint8Array(buffer).toString());
+    console.log(group);
+    return this.combineMeshes(group);
+  }
+
+  private combineMeshes(group: Group): BufferGeometry {
+    const geometries: BufferGeometry[] = [];
+    group.traverse((child: Object3D) => {
+      if (child instanceof Mesh) {
+        geometries.push(child.geometry);
       }
-    }
-    else {
-      let index = geometry.index;
-      let faces = index.count / 3;
-      for (let i = 0; i < faces; i++){
-        // @ts-ignore
-        p1.fromBufferAttribute(position, index.array[i * 3 + 0]);
-        // @ts-ignore
-        p2.fromBufferAttribute(position, index.array[i * 3 + 1]);
-        // @ts-ignore
-        p3.fromBufferAttribute(position, index.array[i * 3 + 2]);
-        sum += this.signedVolumeOfTriangle(p1, p2, p3);
-      }
-    }
-    return sum;
+    });
+
+    return mergeBufferGeometries(geometries, true);
   }
 
-  private signedVolumeOfTriangle(p1: Vector3, p2: Vector3, p3: Vector3) {
-    return p1.dot(p2.cross(p3)) / 6.0;
-  }
 }

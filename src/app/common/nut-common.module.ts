@@ -22,8 +22,7 @@ import {
   TuiIslandModule, TuiMarkerIconModule,
   TuiTabsModule, TuiToggleModule
 } from "@taiga-ui/kit";
-import { StlViewerComponent } from '../model-viewer/components/model-viewer/stl-viewer.component';
-import {StlModelViewerModule} from "angular-stl-model-viewer";
+import { ModelUploadComponent } from '../model-viewer/components/model-upload/model-upload.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
@@ -31,8 +30,7 @@ import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {TuiIsPresentPipeModule} from "@taiga-ui/cdk";
 @NgModule({
   declarations: [
-    NutToolbarComponent,
-    StlViewerComponent
+    NutToolbarComponent
   ],
     exports: [
         BrowserModule,
@@ -41,7 +39,33 @@ import {TuiIsPresentPipeModule} from "@taiga-ui/cdk";
         TuiRootModule,
         NgbModule,
         NutToolbarComponent,
-        StlViewerComponent
+        TuiTabsModule,
+        TuiButtonModule,
+        TuiSvgModule,
+        TuiIslandModule,
+        TuiInputModule,
+        TuiGroupModule,
+        HttpClientModule,
+        TuiInputSliderModule,
+        FormsModule,
+        ReactiveFormsModule,
+        TuiInputFilesModule,
+        TuiAccordionModule,
+        TuiLoaderModule,
+        TuiIsPresentPipeModule,
+        TuiMarkerIconModule,
+        TuiLinkModule,
+        TuiToggleModule,
+        TuiCheckboxBlockModule,
+        TuiInputSliderModule,
+        TuiCheckboxBlockModule,
+        TuiAccordionModule,
+        TuiIsPresentPipeModule,
+        TuiLoaderModule,
+        TuiInputFilesModule,
+        TuiMarkerIconModule,
+        ReactiveFormsModule,
+        TuiIslandModule
     ],
   imports: [
     BrowserModule,
@@ -49,7 +73,6 @@ import {TuiIsPresentPipeModule} from "@taiga-ui/cdk";
     AppRoutingModule,
     TuiRootModule,
     NgbModule,
-    StlModelViewerModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -57,24 +80,7 @@ import {TuiIsPresentPipeModule} from "@taiga-ui/cdk";
         deps: [HttpClient]
       }
     }),
-    TuiTabsModule,
-    TuiButtonModule,
-    TuiSvgModule,
-    TuiIslandModule,
-    TuiInputModule,
-    TuiGroupModule,
-    HttpClientModule,
-    TuiInputSliderModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TuiInputFilesModule,
-    TuiAccordionModule,
-    TuiLoaderModule,
-    TuiIsPresentPipeModule,
-    TuiMarkerIconModule,
-    TuiLinkModule,
-    TuiToggleModule,
-    TuiCheckboxBlockModule,
+    TuiTabsModule
   ]
 })
 export class NutCommonModule { }
