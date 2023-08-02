@@ -2,12 +2,15 @@ import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@a
 import { Box3, HemisphereLight, Light, Mesh, Object3D, PerspectiveCamera, Vector3 } from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import {Observable, Subject} from "rxjs";
+import { filter, finalize, Observable, of, Subject, switchMap, tap } from "rxjs";
 import {TuiFileLike} from "@taiga-ui/kit";
 import {MeshStore} from "../../stores/mesh.store";
 import {MeshProcessingService} from "../../services/mesh-processing.service";
 import { PrintUploadFormFields } from "./print-settings-options.enum";
-import { PrintQuality, PrintStrength } from '@printnuts/common';
+import { PrintMaterialDto, PrintModelDetailsRespDto, PrintQuality, PrintSettingsDto, PrintStrength } from '@printnuts/common';
+import { MaterialService } from "../../services/material.service";
+import { isDark, isNonNull } from "../../../common/util/common.util";
+import { PrintModelDetailsReqDto } from "../../models/print-model-details.req.dto";
 
 @Component({
   selector: 'haus-model-upload',
@@ -17,6 +20,7 @@ import { PrintQuality, PrintStrength } from '@printnuts/common';
 export class ModelUploadComponent implements OnInit {
   protected readonly ACCEPTS_HEADER: string = this.meshProcessingService.ACCEPTS_HEADER;
   protected readonly FIELDS = PrintUploadFormFields;
+  protected readonly isDark = isDark;
 
   @Input() styleClass: string = '';
   @Input() maxFileSize: number = 64 * 1000 * 1000; // 64 MB
@@ -27,15 +31,27 @@ export class ModelUploadComponent implements OnInit {
 
   loadedMesh$: Observable<Mesh | null>;
 
+  printDetailsResponse$: Observable<PrintModelDetailsRespDto | null>;
+  loadingPrintDetails: boolean = false;
+
   printForm: FormGroup;
 
+  printDimensions: Vector3 | null;
+
+  materialList: PrintMaterialDto[] = [];
+  qualityList: PrintQuality[] = Object.values(PrintQuality);
+  strengthList: PrintStrength[] = Object.values(PrintStrength);
+
   constructor(private meshStore: MeshStore,
-              private meshProcessingService: MeshProcessingService) {
+              private meshProcessingService: MeshProcessingService,
+              private materialService: MaterialService) {
   }
 
   ngOnInit(): void {
     this.buildSettingsFormGroup();
     this.bindFileChanges();
+    this.bindFormCompletion();
+    this.loadMaterials();
   }
 
   private buildSettingsFormGroup(): void {
@@ -56,7 +72,44 @@ export class ModelUploadComponent implements OnInit {
     );
     this.loadedFile$ = this.meshStore.getFileAsObservable();
     this.loadingFile$ = this.meshStore.getLoadingFileAsObservable();
-    this.loadedMesh$ = this.meshStore.getMeshAsObservable();
+    this.loadedMesh$ = this.meshStore.getMeshAsObservable().pipe(
+      tap(mesh => {
+        if (mesh) {
+          const boundingBox = new Box3().setFromObject(mesh);
+          this.printDimensions = boundingBox.getSize(new Vector3());
+        } else {
+          this.printDimensions = null;
+        }
+      }
+    ));
+  }
+
+  private bindFormCompletion(): void {
+    this.printDetailsResponse$ = this.printForm.valueChanges.pipe(
+      switchMap(() => {
+        if (this.printForm.status === 'VALID') {
+          const file: TuiFileLike = this.printForm.get(PrintUploadFormFields.FILE)?.value;
+          const material: PrintMaterialDto = this.printForm.get(PrintUploadFormFields.MATERIAL)?.value;
+          const quality: PrintQuality = this.printForm.get(PrintUploadFormFields.QUALITY)?.value;
+          const strength: PrintStrength = this.printForm.get(PrintUploadFormFields.STRENGTH)?.value;
+
+          this.loadingPrintDetails = true;
+          return this.meshProcessingService.getModelDetails(file, material._id, new PrintSettingsDto(quality, strength)).pipe(
+            finalize(() => this.loadingPrintDetails = false)
+          );
+        } else {
+          return of(null);
+        }
+      })
+    )
+  }
+
+  private loadMaterials(): void {
+    this.materialService.getMaterials().subscribe(
+      materials => {
+        this.materialList = materials;
+      }
+    );
   }
 
   onReject(file: TuiFileLike | readonly TuiFileLike[]): void {
@@ -71,4 +124,7 @@ export class ModelUploadComponent implements OnInit {
     this.removeFile();
     this.rejectedFile$.next(null);
   }
+
+
+  protected readonly isNonNull = isNonNull;
 }

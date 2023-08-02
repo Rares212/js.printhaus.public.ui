@@ -1,0 +1,28 @@
+<div class="d-flex justify-content-between tui-space_left-3">
+  <div #printDimension *ngIf="printDimensions">
+    {{(printDimensions.x | number:'1.0-0') + ' x ' + (printDimensions.y | number:'1.0-0') + ' x ' + (printDimensions.z | number:'1.0-0') + ' mm'}}
+  </div>
+
+  <div #printData *ngIf="printDetails" class="tui-form__row tui-form__row_multi-fields">
+    <div class="tui-form__multi-field">
+      <label tuiLabel="Cost">
+        <tui-money [currency]="printDetails.cost.currency"
+                   [value]="printDetails.cost.amount / 100">
+        </tui-money>
+      </label>
+    </div>
+
+    <div class="tui-form__multi-field">
+      <label tuiLabel="Weight">
+        {{(printDetails.grams | number:'1.0-0') + 'g'}}
+      </label>
+    </div>
+
+    <div class="tui-form__multi-field">
+      <label tuiLabel="Print time" class="text-nowrap">
+        {{(printDetails.estimatedPrintTimeHours | hourToTime) + 'h'}}
+      </label>
+    </div>
+  </div>
+</div>
+

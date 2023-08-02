@@ -9,6 +9,7 @@ import { DashboardIntroComponent } from './components/dashboard-intro/dashboard-
 import {NgParticlesModule} from "ng-particles";
 import {TuiTagModule} from "@taiga-ui/kit";
 import { ModelViewerModule } from "../model-viewer/model-viewer.module";
+import { TuiScrollbarModule } from "@taiga-ui/core";
 
 
 
@@ -23,7 +24,8 @@ import { ModelViewerModule } from "../model-viewer/model-viewer.module";
     NgParticlesModule,
     NgxPageScrollCoreModule,
     TuiTagModule,
-    ModelViewerModule
+    ModelViewerModule,
+    TuiScrollbarModule
   ],
   exports: [
     DashboardPage

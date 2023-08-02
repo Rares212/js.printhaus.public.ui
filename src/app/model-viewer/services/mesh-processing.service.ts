@@ -55,7 +55,7 @@ export class MeshProcessingService {
                    centered: boolean = true): Observable<Mesh> {
 
     const fileType: string = getFileType(file.name)!;
-    switch (fileType) {
+    switch (fileType.toLowerCase()) {
       case SupportedFileTypes.STL: {
         return from((file as File).arrayBuffer()).pipe(
           map(buffer => this.parseStl(buffer)),
