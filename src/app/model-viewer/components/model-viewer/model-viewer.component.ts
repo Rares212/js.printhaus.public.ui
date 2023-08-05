@@ -31,8 +31,8 @@ import { isNonNull, removeAllFromScene } from "../../../common/util/common.util"
 })
 export class ModelViewerComponent implements AfterViewInit, OnDestroy, OnChanges {
     @ViewChild("rendererContainer") rendererContainer: ElementRef;
-    @Input() mesh: Mesh | null;
-    @Input() material: Material | null;
+    @Input() mesh: Mesh | null = null;
+    @Input() material: Material | null = null;
     @Input() materialColor: ColorRepresentation = "#e5ded4";
     @Input() styleClass: string = "";
 

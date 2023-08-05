@@ -41,7 +41,7 @@ export class ModelUploadComponent implements OnInit {
 
     printForm: FormGroup;
 
-    printDimensions: Vector3 | null;
+    printDimensions: Vector3 | null = null;
 
     materials: PrintMaterialDto[][] = [];
     materialLabels: string[] = [];
