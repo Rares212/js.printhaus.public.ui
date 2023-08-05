@@ -5,6 +5,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 # Overview
 
 This repository contains the Angular based frontend application for the Printnuts 3D printing website. It is responsible for rendering the user interface and handling user interactions.
+
 This application communicates with the backend services via RESTful APIs, and uses the js.printnuts.module for shared resources and utilities. It follows a modular architecture, with components, services, and utilities organized in a structured manner for easy navigation and scalability.
 
 # Installation
