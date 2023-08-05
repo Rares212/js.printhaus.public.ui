@@ -74,20 +74,13 @@ export class MeshProcessingService {
     }
   }
 
-  public sendTestRequest(file: TuiFileLike): Observable<PrintModelDetailsRespDto> {
-    return this.getModelDetails(file, '643b21fb63453139aefddf5d', {
-      quality: PrintQuality.NORMAL,
-      strength: PrintStrength.NORMAL
-    });
-  }
-
   public getModelDetails(file: TuiFileLike, materialId: string, printSettings: PrintSettingsDto): Observable<PrintModelDetailsRespDto> {
     const apiUrl = 'printnuts-api/print/model-details';
 
     const fileType: SupportedFileTypes = getFileType(file.name)! as SupportedFileTypes;
 
     return from((file as File).arrayBuffer()).pipe(
-      map(buffer => gzipSync(new Uint8Array(buffer))),
+      map(buffer => gzipSync(new Uint8Array(buffer), {mtime: 0})),
 
       switchMap(buffer => {
         const body = new PrintModelDetailsReqDto();

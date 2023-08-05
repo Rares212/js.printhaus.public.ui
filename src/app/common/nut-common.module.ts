@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  TuiButtonModule,
-  TuiGroupModule,
+  TuiButtonModule, TuiErrorModule,
+  TuiGroupModule, TuiHintModule, TuiLabelModule,
   TuiLinkModule,
   TuiLoaderModule,
   TuiRootModule,
-  TuiSvgModule
+  TuiSvgModule, TuiTextfieldControllerModule
 } from "@taiga-ui/core";
 import { NutToolbarComponent } from './components/toolbar/nut-toolbar.component';
 import {AppModule} from "../app.module";
@@ -15,12 +15,12 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {AppRoutingModule} from "../app-routing.module";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {
-  TuiAccordionModule, TuiCheckboxBlockModule,
+  TuiAccordionModule, TuiActionModule, TuiCheckboxBlockModule, TuiDataListWrapperModule, TuiFieldErrorPipeModule,
   TuiInputFilesModule,
   TuiInputModule,
   TuiInputSliderModule,
-  TuiIslandModule, TuiMarkerIconModule,
-  TuiTabsModule, TuiToggleModule
+  TuiIslandModule, TuiLineClampModule, TuiMarkerIconModule, TuiSelectModule,
+  TuiTabsModule, TuiTagModule, TuiToggleModule
 } from "@taiga-ui/kit";
 import { ModelUploadComponent } from '../model-viewer/components/model-upload/model-upload.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -30,6 +30,7 @@ import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {TuiIsPresentPipeModule} from "@taiga-ui/cdk";
 import { ReplaceUnderscorePipe } from './pipes/replace-underscore.pipe';
 import { HourToTimePipe } from './pipes/hour-to-time.pipe';
+import { TuiMoneyModule } from "@taiga-ui/addon-commerce";
 @NgModule({
   declarations: [
     NutToolbarComponent,
@@ -68,6 +69,17 @@ import { HourToTimePipe } from './pipes/hour-to-time.pipe';
     TuiLoaderModule,
     TuiInputFilesModule,
     TuiMarkerIconModule,
+    TuiHintModule,
+    TuiSelectModule,
+    TuiDataListWrapperModule,
+    TuiTagModule,
+    TuiTextfieldControllerModule,
+    TuiLineClampModule,
+    TuiActionModule,
+    TuiErrorModule,
+    TuiFieldErrorPipeModule,
+    TuiMoneyModule,
+    TuiLabelModule,
     ReactiveFormsModule,
     TuiIslandModule,
     ReplaceUnderscorePipe,

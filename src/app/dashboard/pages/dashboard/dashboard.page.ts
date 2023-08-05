@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Engine} from "tsparticles-engine";
 import { loadFull } from "tsparticles";
-// @ts-ignore
 import * as AOS from 'aos';
 
 
@@ -11,7 +10,8 @@ import * as AOS from 'aos';
   styleUrls: ['./dashboard.page.scss']
 })
 export class DashboardPage implements OnInit {
-  particleConfigPath: string = './assets/config/particle-nodes.conf.json'
+  // particleConfigPath: string = './assets/config/particle-nodes.conf.json'
+    particleConfigPath: string = ''
 
   ngOnInit(): void {
     AOS.init({

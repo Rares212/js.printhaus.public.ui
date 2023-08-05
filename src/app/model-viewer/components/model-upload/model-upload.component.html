@@ -1,5 +1,5 @@
 <form [formGroup]="printForm">
-  <tui-island [class]="styleClass + ' subtle-shadow'">
+  <tui-island [class]="styleClass + ' subtle-shadow restricted-height'">
     <p class="tui-island__title text-center">Load your own model (STL)</p>
 
     <tui-input-files class="p-2"
@@ -34,7 +34,8 @@
       <haus-print-details [printDimensions]="printDimensions"
                           [printDetails]="printDetailsResponse$ | async">
       </haus-print-details>
-      <haus-model-viewer [mesh]="loadedMesh$ | async">
+      <haus-model-viewer [mesh]="loadedMesh$ | async"
+                         [materialColor]="printForm.get(FIELDS.MATERIAL)?.value.color">
       </haus-model-viewer>
     </tui-loader>
 
@@ -42,7 +43,9 @@
       <tui-select [formControlName]="FIELDS.MATERIAL"
                   [valueContent]="materialContentShort">
         Material
-        <tui-data-list-wrapper *tuiDataList [items]="materialList" [itemContent]="materialContent">
+        <tui-data-list-wrapper *tuiDataList
+                               [items]="materials" [labels]="materialLabels"
+                               [itemContent]="materialContent">
         </tui-data-list-wrapper>
       </tui-select>
 
@@ -75,8 +78,6 @@
         Change model
       </button>
     </div>
-
-
   </tui-island>
 </form>
 
@@ -90,26 +91,17 @@
 
 <ng-template #materialContent let-item>
   <div *ngIf="item" class="d-flex flex-row align-items-center w-100">
-    <div class="material-tag">
-      <tui-tag size="s" [value]="item.materialType"
-               class="mx-2"
-               [ngStyle]="{'background-color': item.color, 'color': isDark(item.color) ? 'var(--tui-text-01-night)' : 'var(--tui-text-01)'}">
-      </tui-tag>
-    </div>
-
-    <tui-line-clamp
-      [content]="item.name"
-      [linesLimit]="1"
-    ></tui-line-clamp>
+    <tui-tag [value]="item.name"
+             [ngStyle]="{'background-color': item.color, 'color': isDark(item.color) ? 'var(--tui-text-01-night)' : 'var(--tui-text-01)', 'cursor': 'pointer'}">
+    </tui-tag>
   </div>
 </ng-template>
 
 <ng-template #materialContentShort let-item>
   <div *ngIf="item" class="d-flex flex-row align-items-center w-100">
-    <tui-line-clamp
-      [content]="item.name"
-      [linesLimit]="1"
-    ></tui-line-clamp>
+    <tui-tag [value]="item.name + ' ' + item.materialType"
+             [ngStyle]="{'background-color': item.color, 'color': isDark(item.color) ? 'var(--tui-text-01-night)' : 'var(--tui-text-01)'}">
+    </tui-tag>
   </div>
 </ng-template>
 

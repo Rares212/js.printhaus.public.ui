@@ -11,11 +11,11 @@ import {
   TuiMarkerIconModule, TuiSelectModule, TuiTagModule
 } from "@taiga-ui/kit";
 import {
-  TuiErrorModule,
-  TuiHintModule,
-  TuiLabelModule,
-  TuiLoaderModule,
-  TuiTextfieldControllerModule
+    TuiErrorModule,
+    TuiHintModule,
+    TuiLabelModule,
+    TuiLoaderModule,
+    TuiTextfieldControllerModule, TuiTooltipModule
 } from "@taiga-ui/core";
 import { TuiIsPresentPipeModule } from "@taiga-ui/cdk";
 import { NutCommonModule } from "../common/nut-common.module";
@@ -23,28 +23,16 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { TuiMoneyModule } from "@taiga-ui/addon-commerce";
 import { PrintDetailsComponent } from './components/print-details/print-details.component';
 
-
-
 @NgModule({
   declarations: [
     ModelViewerComponent,
     ModelUploadComponent,
-    PrintDetailsComponent
+    PrintDetailsComponent,
   ],
-  imports: [
-    NutCommonModule,
-    TuiHintModule,
-    TuiSelectModule,
-    TuiDataListWrapperModule,
-    TuiTagModule,
-    TuiTextfieldControllerModule,
-    TuiLineClampModule,
-    TuiActionModule,
-    TuiErrorModule,
-    TuiFieldErrorPipeModule,
-    TuiMoneyModule,
-    TuiLabelModule
-  ],
+    imports: [
+        NutCommonModule,
+        TuiTooltipModule
+    ],
   exports: [
     ModelViewerComponent,
     ModelUploadComponent
