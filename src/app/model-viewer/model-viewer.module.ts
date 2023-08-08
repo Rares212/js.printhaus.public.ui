@@ -4,11 +4,11 @@ import {MeshProcessingService} from "./services/mesh-processing.service";
 import { ModelViewerComponent } from './components/model-viewer/model-viewer.component';
 import { ModelUploadComponent } from "./components/model-upload/model-upload.component";
 import {
-  TuiAccordionModule, TuiActionModule,
-  TuiCheckboxBlockModule, TuiDataListWrapperModule, TuiFieldErrorPipeModule,
-  TuiInputFilesModule,
-  TuiInputSliderModule, TuiIslandModule, TuiLineClampModule,
-  TuiMarkerIconModule, TuiSelectModule, TuiTagModule
+    TuiAccordionModule, TuiActionModule,
+    TuiCheckboxBlockModule, TuiDataListWrapperModule, TuiElasticContainerModule, TuiFieldErrorPipeModule,
+    TuiInputFilesModule,
+    TuiInputSliderModule, TuiIslandModule, TuiLineClampModule,
+    TuiMarkerIconModule, TuiSelectModule, TuiTagModule
 } from "@taiga-ui/kit";
 import {
     TuiErrorModule,
@@ -31,7 +31,8 @@ import { PrintDetailsComponent } from './components/print-details/print-details.
   ],
     imports: [
         NutCommonModule,
-        TuiTooltipModule
+        TuiTooltipModule,
+        TuiElasticContainerModule
     ],
   exports: [
     ModelViewerComponent,

@@ -17,9 +17,16 @@
         </h2>
     </div>
 
-    <h6 data-aos="zoom-out-down" class="text-center mb-5 border-1 rounded-3">
-        Ready to bring your designs to life? Scroll down to get started...
-    </h6>
+    <div data-aos="zoom-out-down" class="bottom-div d-flex flex-column justify-content-between align-items-center">
+        <i class="bi bi-arrow-down mb-5 down-icon"
+           [@bounceAnimation]="arrowIconState" (@bounceAnimation.done)="toggleArrowState()">
+
+        </i>
+        <h6 class="text-center mb-5 border-1 rounded-3">
+            Ready to bring your designs to life? Scroll down to get started...
+        </h6>
+    </div>
+
 </div>
 
 

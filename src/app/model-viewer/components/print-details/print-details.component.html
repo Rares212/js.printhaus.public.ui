@@ -6,8 +6,7 @@
 
         <div *ngIf="printDetails" class="col d-flex flex-column">
             <div #printData class="tui-form__row tui-form__row_multi-fields">
-                <div class="tui-form__multi-field"
-                     [tuiHint]="costTooltip">
+                <div class="tui-form__multi-field">
                     <label tuiLabel="Cost">
                         <tui-money [currency]="printDetails.cost.currency"
                                    [value]="printDetails.cost.amount / 100">
@@ -30,7 +29,3 @@
         </div>
     </div>
 </div>
-
-<ng-template #costTooltip>
-    <label [tuiLabel]="printDetails?.costCalculationMessage"></label>
-</ng-template>

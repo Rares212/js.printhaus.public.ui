@@ -24,26 +24,26 @@
         "costCurrency": "RON"
     },
     {
-        "id": "4",
+        "id": "Octopus",
         "name": "Gallery 1",
-        "description": "Gallery 1 description",
-        "img": "assets/img/gallery-mock-1.jpg",
+        "description": "Printed in: Azure Blue PETG",
+        "img": "assets/img/gallery-mock-4.jpg",
         "costAmount": "1250",
         "costCurrency": "RON"
     },
     {
         "id": "5",
-        "name": "Gallery 2",
-        "description": "Gallery 2 description",
-        "img": "assets/img/gallery-mock-2.jpg",
-        "costAmount": "2000",
+        "name": "Groot",
+        "description": "Printed in: Wood PLA",
+        "img": "assets/img/gallery-mock-5.jpg",
+        "costAmount": "3500",
         "costCurrency": "RON"
     },
     {
         "id": "6",
-        "name": "Gallery 3",
-        "description": "Gallery 3 description",
-        "img": "assets/img/gallery-mock-3.jpg",
+        "name": "Scorpion",
+        "description": "Printed in: Blue PLA",
+        "img": "assets/img/gallery-mock-6.jpg",
         "costAmount": "2500",
         "costCurrency": "RON"
     }

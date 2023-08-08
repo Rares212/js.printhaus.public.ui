@@ -25,8 +25,9 @@ export class GalleryComponent implements OnInit, AfterViewInit {
 
     protected activeIndex: number = 0;
 
-    constructor(private galleryService: GalleryService) {
-    }
+    protected autoScroll: boolean = true;
+
+    constructor(private galleryService: GalleryService) {}
 
     ngOnInit(): void {
         this.loadingItems = true;
