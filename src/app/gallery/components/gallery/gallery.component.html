@@ -1,0 +1,79 @@
+<tui-elastic-container>
+    <div class="d-flex flex-column justify-content-center align-items-center m-5">
+        <tui-island tuiCarouselButtons
+             class="d-flex flex-column justify-content-center align-items-center w-100
+                 px-4 m-2 subtle-shadow-static ">
+            <div class="negative-margin">
+                <h3 class="text-center">Begin Your 3D Journey</h3>
+                <h4 class="tui-space_top-5 text-center">Quality Prints | Friendly Prices</h4>
+                <hr class="title-divider">
+            </div>
+            <div tuiCarouselButtons class="d-flex flex-row justify-content-center align-items-center w-100">
+                <div>
+                    <button tuiIconButton
+                            class="flex-grow-1"
+                            icon="tuiIconChevronLeftLarge"
+                            title="Previous" type="button"
+                            (click)="carousel.prev()">
+                    </button>
+                </div>
+                <div #carouselParent class="flex-grow-1 min-width-zero">
+                    <tui-loader [showLoader]="loadingItems" class="w-100">
+                        <tui-carousel #carousel class="carousel"
+                                      [itemsCount]="visibleItemCount"
+                                      [(index)]="activeIndex"
+                                      [draggable]="true"
+                                      [duration]="5000">
+                            <ng-container *ngFor="let item of (galleryItems$ | async); let i = index">
+                                <tui-island *tuiItem
+                                            class="d-flex flex-column justify-content-center align-items-center
+                                                   subtle-shadow m-5
+                                                   align-self-center"
+                                            [ngStyle]="{'width': cardWidth + 'px'}"
+                                            [class.activeItem]="i === activeIndex + 1">
+                                    <h2 class="tui-island__title">{{item.name}}</h2>
+                                    <img [ngSrc]="item.img"
+                                         class="island-rounding"
+                                         [width]="imageWidth" [height]="imageHeight"
+                                         [draggable]="false">
+                                    <p class="tui-space_top-2">
+                                        {{item.description}}
+                                    </p>
+                                    <tui-money [value]="item.costAmount / 100"
+                                               [currency]="item.costCurrency">
+                                    </tui-money>
+                                    <div class="tui-space_top-2">
+                                        <button tuiButton type="button"
+                                                size="m" [icon]="cartIcon">
+                                            Add to cart
+                                        </button>
+                                    </div>
+                                </tui-island>
+                            </ng-container>
+                        </tui-carousel>
+                    </tui-loader>
+                </div>
+                <div>
+                    <button tuiIconButton
+                            class="flex-grow-1"
+                            type="button"
+                            icon="tuiIconChevronRightLarge"
+                            title="Next"
+                            (click)="carousel.next()">
+                    </button>
+                </div>
+            </div>
+        </tui-island>
+
+        <tui-pagination
+            size="s"
+            class="tui-space_top-4"
+            [length]="((galleryItems$ | async)?.length || 0) / ((itemCount$ | async) || 1)"
+            [index]="currentPage"
+        ></tui-pagination>
+    </div>
+</tui-elastic-container>
+
+<ng-template #cartIcon>
+    <i class="bi bi-cart4"></i>
+</ng-template>

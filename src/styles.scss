@@ -30,16 +30,37 @@
   }
 }
 
+.subtle-shadow-hover {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0.12);
+    transition: box-shadow 0.3s ease-in-out;
+    &:hover {
+        box-shadow: 0 0.75rem 2.25rem rgba(0, 0, 0, 0.2);
+    }
+}
+
+
+.subtle-shadow-static {
+  box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.12);
+}
+
 .parent-snap-scroll {
     scroll-snap-type: y mandatory;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .child-snap-scroll {
     scroll-snap-align: center;
 }
 
+.island-rounding {
+    border-radius: var(--tui-radius-xl);
+}
+
+.min-width-zero {
+    min-width: 0;
+}
+
 .toolbar-offset {
     margin-top: 88px;
 }
-

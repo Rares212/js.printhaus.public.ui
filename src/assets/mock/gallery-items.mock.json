@@ -1,0 +1,50 @@
+[
+    {
+        "id": "1",
+        "name": "Rocktopus",
+        "description": "Printed in: Pastel Green PLA",
+        "img": "assets/img/gallery-mock-1.jpg",
+        "costAmount": "1250",
+        "costCurrency": "RON"
+    },
+    {
+        "id": "2",
+        "name": "Flexible shoes",
+        "description": "Printed in: Black Nylon",
+        "img": "assets/img/gallery-mock-2.jpg",
+        "costAmount": "2000",
+        "costCurrency": "RON"
+    },
+    {
+        "id": "3",
+        "name": "Skull decoration",
+        "description": "Printed in: Marble White PLA",
+        "img": "assets/img/gallery-mock-3.jpg",
+        "costAmount": "2500",
+        "costCurrency": "RON"
+    },
+    {
+        "id": "4",
+        "name": "Gallery 1",
+        "description": "Gallery 1 description",
+        "img": "assets/img/gallery-mock-1.jpg",
+        "costAmount": "1250",
+        "costCurrency": "RON"
+    },
+    {
+        "id": "5",
+        "name": "Gallery 2",
+        "description": "Gallery 2 description",
+        "img": "assets/img/gallery-mock-2.jpg",
+        "costAmount": "2000",
+        "costCurrency": "RON"
+    },
+    {
+        "id": "6",
+        "name": "Gallery 3",
+        "description": "Gallery 3 description",
+        "img": "assets/img/gallery-mock-3.jpg",
+        "costAmount": "2500",
+        "costCurrency": "RON"
+    }
+]

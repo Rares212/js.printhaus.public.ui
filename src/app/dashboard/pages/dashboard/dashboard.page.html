@@ -4,18 +4,22 @@
   id="background"
   [url]="particleConfigPath"
   [particlesInit]="particlesInit">
-
 </ng-particles>
 
-<div class="parent-snap-scroll">
+<div class="parent-snap-scroll vh-100">
     <section class="fullscreen child-snap-scroll position-relative">
-        <nut-dashboard-intro class="w-100 h-100 " styleClass="w-100 h-100 toolbar-offset"></nut-dashboard-intro>
+        <nut-dashboard-intro class="w-100 h-100 " styleClass="w-100 h-100"></nut-dashboard-intro>
     </section>
 
 
     <section class="fullscreen container child-snap-scroll position-relative
-                    d-flex flex-column justify-content-center align-items-center toolbar-offset" data-aos="fade-down" data-aos-offset="10" data-aos-mirror="true">
+                    d-flex flex-column justify-content-center align-items-center toolbar-offset">
         <haus-model-upload class="col-12 col-md-12 col-lg-8 col-xl-6" styleClass="toolbar-offset"></haus-model-upload>
+    </section>
+
+    <section class="fullscreen container child-snap-scroll position-relative
+                    d-flex flex-column justify-content-center align-items-center toolbar-offset">
+        <haus-gallery class="w-100"></haus-gallery>
     </section>
 </div>
 
