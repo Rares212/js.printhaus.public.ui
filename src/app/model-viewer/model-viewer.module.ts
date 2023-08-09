@@ -22,6 +22,7 @@ import { NutCommonModule } from "../common/nut-common.module";
 import { ReactiveFormsModule } from "@angular/forms";
 import { TuiMoneyModule } from "@taiga-ui/addon-commerce";
 import { PrintDetailsComponent } from './components/print-details/print-details.component';
+import { TuiRingChartModule } from "@taiga-ui/addon-charts";
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { PrintDetailsComponent } from './components/print-details/print-details.
     imports: [
         NutCommonModule,
         TuiTooltipModule,
-        TuiElasticContainerModule
+        TuiElasticContainerModule,
+        TuiRingChartModule
     ],
   exports: [
     ModelViewerComponent,

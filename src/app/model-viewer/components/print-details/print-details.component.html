@@ -2,6 +2,15 @@
     <div class="row">
         <div #printDimension *ngIf="printDimensions" class="col">
             {{(printDimensions.x | number:'1.0-0') + ' x ' + (printDimensions.y | number:'1.0-0') + ' x ' + (printDimensions.z | number:'1.0-0') + ' mm'}}
+
+            <tui-ring-chart *ngIf="printDetails"
+                            [value]="costChartValues"
+                            [(activeItemIndex)]="activeCostChartIndex"
+                            class="cost-chart">
+                <tui-money [value]="sum / 100" [currency]="costChartCurrency">
+                </tui-money>
+                <div>{{ label }}</div>
+            </tui-ring-chart>
         </div>
 
         <div *ngIf="printDetails" class="col d-flex flex-column">

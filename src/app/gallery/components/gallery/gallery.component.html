@@ -16,7 +16,7 @@
                             class="flex-grow-1"
                             icon="tuiIconChevronLeftLarge"
                             title="Previous" type="button"
-                            (click)="carousel.prev(); autoScroll = false">
+                            (click)="activeIndex === 0 ? activeIndex = itemCount - visibleItemCount : carousel.prev(); autoScroll = false">
                     </button>
                 </div>
                 <div #carouselParent class="flex-grow-1 min-width-zero">
@@ -26,7 +26,8 @@
                                       [(index)]="activeIndex"
                                       [draggable]="true"
                                       [duration]="autoScroll ? 3000 : 0"
-                                      (click)="autoScroll=false">
+                                      (click)="autoScroll=false"
+                                      (indexChange)="onIndexChange($event)">
                             <ng-container *ngFor="let item of (galleryItems$ | async); let i = index">
                                 <tui-island *tuiItem
                                             class="d-flex flex-column justify-content-center align-items-center

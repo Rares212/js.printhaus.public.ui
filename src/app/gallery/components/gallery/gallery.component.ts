@@ -20,7 +20,7 @@ export class GalleryComponent implements OnInit, AfterViewInit {
     protected visibleItemCount: number = 0;
 
     protected galleryItems$: Observable<GalleryItemDto[]>;
-    protected itemCount$: Observable<number>;
+    protected itemCount: number = 0;
     protected loadingItems: boolean = false;
 
     protected activeIndex: number = 0;
@@ -32,10 +32,8 @@ export class GalleryComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.loadingItems = true;
         this.galleryItems$ = this.galleryService.getGalleryItems().pipe(
+            tap(items => this.itemCount = items.length),
             finalize(() => this.loadingItems = false)
-        );
-        this.itemCount$ = this.galleryItems$.pipe(
-            map((items: GalleryItemDto[]) => items.length)
         );
     }
 
@@ -48,8 +46,12 @@ export class GalleryComponent implements OnInit, AfterViewInit {
         this.calculateDimensions();
     }
 
-    get currentPage(): number {
-        return Math.floor(this.activeIndex / this.visibleItemCount);
+    onIndexChange(index: number): void {
+        // Make sure there are always items displayed by forcing a circular rotation at the end of the gallery
+        if (this.itemCount - index < this.visibleItemCount) {
+            console.log('Rotation')
+            this.activeIndex = 0
+        }
     }
 
     private calculateDimensions(): void {
