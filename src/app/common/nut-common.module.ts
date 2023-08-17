@@ -11,7 +11,7 @@ import {
     TuiRootModule,
     TuiScrollbarModule,
     TuiSvgModule,
-    TuiTextfieldControllerModule
+    TuiTextfieldControllerModule, TuiTooltipModule
 } from "@taiga-ui/core";
 import { NutToolbarComponent } from "./components/toolbar/nut-toolbar.component";
 import { BrowserModule } from "@angular/platform-browser";
@@ -20,12 +20,12 @@ import { AppRoutingModule } from "../app-routing.module";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import {
     TuiAccordionModule,
-    TuiActionModule, TuiCarouselModule,
+    TuiActionModule, TuiBadgeModule, TuiCarouselModule,
     TuiCheckboxBlockModule,
-    TuiDataListWrapperModule,
+    TuiDataListWrapperModule, TuiElasticContainerModule,
     TuiFieldErrorPipeModule,
     TuiInputFilesModule,
-    TuiInputModule,
+    TuiInputModule, TuiInputNumberModule,
     TuiInputSliderModule,
     TuiIslandModule,
     TuiLineClampModule,
@@ -39,16 +39,21 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { TuiIsPresentPipeModule } from "@taiga-ui/cdk";
+import { TuiHoveredModule, TuiIsPresentPipeModule } from "@taiga-ui/cdk";
 import { ReplaceUnderscorePipe } from "./pipes/replace-underscore.pipe";
 import { HourToTimePipe } from "./pipes/hour-to-time.pipe";
-import { TuiMoneyModule } from "@taiga-ui/addon-commerce";
+import { TuiCurrencyPipeModule, TuiMoneyModule } from "@taiga-ui/addon-commerce";
+import { BuyButtonComponent } from './components/buy-button/buy-button.component';
+import { TuiLegendItemModule, TuiRingChartModule } from "@taiga-ui/addon-charts";
+import { MaterialTagComponent } from './components/material-tag/material-tag.component';
 
 @NgModule({
     declarations: [
         NutToolbarComponent,
         ReplaceUnderscorePipe,
-        HourToTimePipe
+        HourToTimePipe,
+        BuyButtonComponent,
+        MaterialTagComponent
     ],
     exports: [
         BrowserModule,
@@ -86,6 +91,7 @@ import { TuiMoneyModule } from "@taiga-ui/addon-commerce";
         TuiSelectModule,
         TuiDataListWrapperModule,
         TuiTagModule,
+        TuiBadgeModule,
         TuiTextfieldControllerModule,
         TuiLineClampModule,
         TuiActionModule,
@@ -98,8 +104,18 @@ import { TuiMoneyModule } from "@taiga-ui/addon-commerce";
         TuiScrollbarModule,
         TuiAlertModule,
         TuiCarouselModule,
+        TuiTooltipModule,
+        TuiElasticContainerModule,
+        TuiRingChartModule,
+        TuiLegendItemModule,
+        TuiHoveredModule,
         ReplaceUnderscorePipe,
-        HourToTimePipe
+        HourToTimePipe,
+        BuyButtonComponent,
+        TuiTabsModule,
+        TuiInputNumberModule,
+        TuiCurrencyPipeModule,
+        MaterialTagComponent
     ],
     imports: [
         BrowserModule,
@@ -114,7 +130,19 @@ import { TuiMoneyModule } from "@taiga-ui/addon-commerce";
                 deps: [HttpClient]
             }
         }),
-        TuiTabsModule
+        TuiTabsModule,
+        TuiInputNumberModule,
+        TuiButtonModule,
+        TuiInputModule,
+        TuiMoneyModule,
+        TuiGroupModule,
+        ReactiveFormsModule,
+        TuiLabelModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        TuiTextfieldControllerModule,
+        TuiCurrencyPipeModule,
+        TuiTagModule
     ]
 })
 export class NutCommonModule {

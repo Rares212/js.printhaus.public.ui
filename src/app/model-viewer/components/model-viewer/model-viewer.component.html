@@ -1,1 +1,4 @@
-<div id="rendererContainer" #rendererContainer class="fixed-aspect-ratio w-100"></div>
+<div id="rendererContainer" #rendererContainer
+     class="w-100 h-100"
+     [ngStyle]="{'cursor': (mesh | tuiIsPresent) ? 'grab' : 'default'}">
+</div>

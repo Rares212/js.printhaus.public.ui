@@ -1,56 +1,97 @@
 import {
     AfterViewInit,
     Component,
-    ElementRef, HostListener,
+    ElementRef,
+    HostListener,
     Input,
     OnChanges,
-    OnDestroy,
-    OnInit,
+    OnDestroy, OnInit,
     SimpleChanges,
     ViewChild
 } from "@angular/core";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import {
+    ACESFilmicToneMapping,
     AmbientLight,
-    Box3, Color, ColorRepresentation,
-    DirectionalLight, Light,
+    Box3, BufferAttribute, BufferGeometry,
+    Color,
+    ColorRepresentation, DataTexture,
+    DirectionalLight, EquirectangularReflectionMapping, GridHelper,
+    Light,
     Material,
     Mesh,
-    MeshPhongMaterial, MeshPhysicalMaterial, MeshStandardMaterial,
-    PerspectiveCamera, PointLight,
+    MeshPhysicalMaterial,
+    PerspectiveCamera, PMREMGenerator, PointLight,
     Scene,
+    Texture,
+    TextureLoader, Vector2,
     Vector3,
     WebGLRenderer
 } from "three";
 import { isNonNull, removeAllFromScene } from "../../../common/util/common.util";
+import { Geometry } from "three/examples/jsm/deprecated/Geometry";
+import { PRINT_QUALITY_NORMAL_MAP_SCALE } from "@printnuts/common";
+import { DEFAULT_PRINT_QUALITY } from "../../util/model-viewer.constants";
+import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader";
 
 @Component({
     selector: "haus-model-viewer",
     templateUrl: "./model-viewer.component.html",
     styleUrls: ["./model-viewer.component.scss"]
 })
-export class ModelViewerComponent implements AfterViewInit, OnDestroy, OnChanges {
+export class ModelViewerComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
     @ViewChild("rendererContainer") rendererContainer: ElementRef;
     @Input() mesh: Mesh | null = null;
-    @Input() material: Material | null = null;
+    @Input() transparency: number = 1.0;
     @Input() materialColor: ColorRepresentation = "#e5ded4";
     @Input() styleClass: string = "";
+    @Input() normalScale: number = 0.2;
+    @Input() showGrid: boolean = true;
+    @Input() gridDivisions: number = 22;
+    @Input() gridSize: number = 220;
 
+    private DEFAULT_COLOR: ColorRepresentation = "#e5ded4";
+    private DEFAULT_TRANSPARENCY: number = 0.8;
+    private DEFAULT_NORMAL_SCALE: number = PRINT_QUALITY_NORMAL_MAP_SCALE[DEFAULT_PRINT_QUALITY];
+
+    material: Material | null = null;
     renderer = new WebGLRenderer({ alpha: true });
     scene = new Scene();
-    camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight);
     controls = new OrbitControls(this.camera, this.renderer.domElement);
 
+    private readonly normalMapUrl: string = "assets/maps/3DPrint_NormalMap_2K.png";
+    private readonly envMapUrl: string = "assets/maps/studio_small_08_1k.exr";
+    private normalMap: Texture;
+    private envMapBackground: DataTexture;
+    private exrCubeRenderTarget: any;
+
+    private gridHelper: GridHelper;
+
     constructor() {
-        this.camera.position.z = 5;
+
+    }
+
+    ngOnInit(): void {
+        const textureLoader = new TextureLoader();
+        this.normalMap = textureLoader.load(this.normalMapUrl);
+        this.loadEnvMap();
+
         this.controls.enableZoom = true;
         this.controls.enableDamping = true;
+
         this.renderer.setClearColor(0xFFFFFF, 1); // Set background color to white
     }
 
     ngAfterViewInit() {
         this.updateRendererSize();
         this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
+        this.renderer.toneMapping = ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1;
+        // this.scene.background = new Color(0xF0FFF0);
+
+        this.gridHelper = new GridHelper(this.gridSize, this.gridDivisions);
+        this.gridHelper.geometry.rotateX( Math.PI / 2 );
 
         this.animate();
     }
@@ -65,42 +106,125 @@ export class ModelViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes["mesh"]) {
-            if (isNonNull(changes["mesh"].currentValue)) {
+            const currentMesh = changes["mesh"].currentValue;
+            if (isNonNull(currentMesh)) {
                 removeAllFromScene(this.scene);
 
                 if (isNonNull(this.material)) {
-                    changes["mesh"].currentValue.material = this.material;
+                    currentMesh.material = this.material;
                 } else {
-                    changes["mesh"].currentValue.material = this.getMeshMaterial();
+                    currentMesh.material = this.getMeshMaterial();
                 }
 
-                this.getDefaultLights().forEach(light => this.scene.add(light));
+                const geometry: BufferGeometry = currentMesh.geometry;
 
-                this.scene.add(changes["mesh"].currentValue);
+                this.updateUVArray(geometry);
+
+                // this.getDefaultLights().forEach(light => this.scene.add(light));
+
+                if (this.showGrid) {
+                    this.scene.add(this.gridHelper);
+                }
+
+                const boundingBox = new Box3().setFromObject(currentMesh);
+                const meshHeight = boundingBox.getSize(new Vector3()).z;
+                currentMesh.position.z = meshHeight / 2 + 0.1;
+
+                this.scene.add(currentMesh);
                 this.adjustCamera();
             } else {
                 removeAllFromScene(this.scene);
             }
         }
 
-        if (changes['materialColor']) {
-            let color = changes['materialColor'].currentValue;
+        if (changes["materialColor"]) {
+            let color = changes["materialColor"].currentValue;
             if (color) {
                 this.materialColor = color;
             } else {
-                this.materialColor = '#e5ded4'; // default color
+                this.materialColor = this.DEFAULT_COLOR;
             }
 
             // apply the color change to the mesh
-            if (this.mesh && this.mesh.material instanceof MeshStandardMaterial) {
-                (this.mesh.material as MeshStandardMaterial).color = new Color(this.materialColor);
+            if (this.mesh && this.mesh.material instanceof MeshPhysicalMaterial) {
+                (this.mesh.material as MeshPhysicalMaterial).color = new Color(this.materialColor);
             }
         }
+
+        if (changes["transparency"]) {
+            let transparency = changes["transparency"].currentValue;
+            if (transparency) {
+                this.transparency = transparency;
+            } else {
+                this.transparency = this.DEFAULT_TRANSPARENCY;
+            }
+
+            // apply the transparency change to the mesh
+            if (this.mesh && this.mesh.material instanceof MeshPhysicalMaterial) {
+                // (this.mesh.material as MeshPhysicalMaterial).transmission = this.transparency;
+            }
+        }
+
+        if (changes["normalScale"]) {
+            let normalScale = changes["normalScale"].currentValue;
+            if (normalScale) {
+                this.normalScale = normalScale;
+            } else {
+                this.normalScale = this.DEFAULT_NORMAL_SCALE;
+            }
+
+            if (this.mesh && this.mesh.material instanceof MeshPhysicalMaterial) {
+                (this.mesh.material as MeshPhysicalMaterial).normalScale = new Vector2(this.normalScale, this.normalScale);
+            }
+        }
+    }
+
+    private loadEnvMap(): void {
+        const exrLoader = new EXRLoader();
+
+        const pmremGenerator = new PMREMGenerator(this.renderer);
+
+        exrLoader.load(this.envMapUrl, (texture: DataTexture) => {
+
+            texture.mapping = EquirectangularReflectionMapping;
+
+            this.exrCubeRenderTarget = pmremGenerator.fromEquirectangular(texture);
+            this.envMapBackground = texture;
+
+            this.scene.environment = this.exrCubeRenderTarget ? this.exrCubeRenderTarget.texture : null;
+            // this.scene.background = this.envMapBackground;
+        });
+
+        pmremGenerator.compileEquirectangularShader();
     }
 
     @HostListener("window:resize", ["$event"])
     onWindowResize(event: any): void {
         this.updateRendererSize();
+    }
+
+    private updateUVArray(geometry: BufferGeometry) {
+        if (geometry.attributes["position"]) {
+            const positions = geometry.attributes["position"].array;
+            const uvs = geometry.attributes["uv"]?.array ? geometry.attributes["uv"].array : [];
+
+            geometry.computeBoundingBox();
+            const bbox: Box3 = geometry.boundingBox!;
+
+            for (let i = 0; i < positions.length; i += 3) {
+                const x = positions[i];
+                const z = positions[i + 2];
+                const uvX = (x - bbox.min.x) / (bbox.max.x - bbox.min.x);
+                const uvY = (z - bbox.min.z) / (bbox.max.z - bbox.min.z);
+
+                uvs[i / 3 * 2] = uvX;
+                uvs[i / 3 * 2 + 1] = uvY;
+            }
+
+            geometry.setAttribute("uv", new BufferAttribute(new Float32Array(uvs), 2));
+
+            geometry.attributes["uv"].needsUpdate = true;
+        }
     }
 
     private updateRendererSize() {
@@ -110,9 +234,18 @@ export class ModelViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     }
 
     private getMeshMaterial(): Material {
-        return new MeshStandardMaterial({
+        return new MeshPhysicalMaterial({
             color: this.materialColor,
-            roughness: 0.96,
+            transmission: 0.05,
+            clearcoat: 0.8,
+            clearcoatRoughness: 0.4,
+            envMapIntensity: 1.0,
+            thickness: 3.0,
+            attenuationDistance: 0.8,
+            attenuationColor: new Color("c0c0c0"),
+            normalMap: this.normalMap,
+            normalScale: new Vector2(0.5, 0.5),
+            roughness: 0.2,
             metalness: 0.01
         });
     }
@@ -124,6 +257,10 @@ export class ModelViewerComponent implements AfterViewInit, OnDestroy, OnChanges
         // Directional light for sun-like lighting
         const directionalLight = new DirectionalLight(0xFFFFFF, 1);
         directionalLight.position.set(1, 1, 1);
+
+        // Point light attached to the camera
+        const cameraLight = new PointLight(0xFFFFFF, 0.5); // Adjust the color and intensity as needed
+        // this.camera.add(cameraLight);
 
         return [ambientLight, directionalLight];
     }
@@ -138,24 +275,23 @@ export class ModelViewerComponent implements AfterViewInit, OnDestroy, OnChanges
         const size = boundingBox.getSize(new Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
         const fov = this.camera.fov * (Math.PI / 180);
-        let cameraZ = Math.abs(maxDim / 2 * Math.tan(fov * 4)); // Increase the divisor to decrease the zoom level
+        let cameraY = Math.abs(maxDim / 2 * Math.tan(fov * 4)); // Increase the divisor to decrease the zoom level
 
-        cameraZ *= 1.1; // Add some extra space
-        this.camera.position.z = cameraZ;
+        cameraY *= 1.1; // Add some extra space
+
+        boundingBox.getCenter(this.camera.position);
+        this.camera.position.x = cameraY;
 
         const minZ = boundingBox.min.z;
-        const cameraToFarEdge = (minZ < 0) ? -minZ + cameraZ : cameraZ - minZ;
+        const cameraToFarEdge = (minZ < 0) ? -minZ + cameraY : cameraY - minZ;
 
-        this.camera.far = cameraToFarEdge * 3;
+        this.camera.far = cameraToFarEdge * 5;
         this.camera.updateProjectionMatrix();
 
-        if (this.controls) {
-            this.controls.target.copy(boundingBox.getCenter(new Vector3()));
-            this.controls.maxDistance = cameraToFarEdge * 2;
-            this.controls.saveState();
-        } else {
-            this.camera.lookAt(boundingBox.getCenter(new Vector3()));
-        }
+        boundingBox.getCenter(this.controls.target);
+        this.controls.maxDistance = cameraToFarEdge * 2;
+        this.controls.saveState();
+        this.controls.update();
     }
 
     private animate = () => {
@@ -163,5 +299,4 @@ export class ModelViewerComponent implements AfterViewInit, OnDestroy, OnChanges
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
     };
-
 }

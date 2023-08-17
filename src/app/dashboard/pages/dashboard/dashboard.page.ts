@@ -13,12 +13,6 @@ export class DashboardPage implements OnInit {
     particleConfigPath: string = "./assets/config/particle-nodes.conf.json";
 
     ngOnInit(): void {
-        AOS.init({
-            easing: "ease-in-out",
-            mirror: true,
-            duration: 1000,
-            delay: 100
-        });
     }
 
     async particlesInit(engine: Engine): Promise<void> {

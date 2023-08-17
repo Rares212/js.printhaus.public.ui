@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { MaterialType, PrintMaterialDto } from "@printnuts/common";
+import { PrintMaterialDto } from "@printnuts/common";
 import { map, Observable } from "rxjs";
 
 @Injectable({
@@ -17,15 +17,15 @@ export class MaterialService {
     return this.httpClient.get<PrintMaterialDto[]>(apiUrl);
   }
 
-  getMaterialsGrouped(): Observable<Map<MaterialType, PrintMaterialDto[]>> {
+  getMaterialsGrouped(): Observable<Map<string, PrintMaterialDto[]>> {
     return this.getMaterials().pipe(
       map(materials => {
-        const materialsGrouped: Map<MaterialType, PrintMaterialDto[]> = new Map<MaterialType, PrintMaterialDto[]>();
+        const materialsGrouped: Map<string, PrintMaterialDto[]> = new Map<string, PrintMaterialDto[]>();
         for (const material of materials) {
-          if (!materialsGrouped.has(material.materialType)) {
-            materialsGrouped.set(material.materialType, []);
+          if (!materialsGrouped.has(material.materialTypeShortName)) {
+            materialsGrouped.set(material.materialTypeShortName, []);
           }
-          materialsGrouped.get(material.materialType)!.push(material);
+          materialsGrouped.get(material.materialTypeShortName)!.push(material);
         }
         return materialsGrouped;
       })

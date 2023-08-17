@@ -7,7 +7,7 @@ import { Cacheable } from "ts-cacheable";
 @Injectable({
     providedIn: "root"
 })
-export class GalleryService {
+export class ShopService {
 
     constructor(private http: HttpClient) {}
 

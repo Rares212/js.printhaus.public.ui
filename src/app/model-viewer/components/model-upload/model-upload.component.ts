@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Inject, Input, OnInit } from "@angular/core";
 import { Box3, Mesh, Vector3 } from "three";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { finalize, Observable, of, Subject, switchMap, tap } from "rxjs";
+import { catchError, finalize, map, Observable, of, Subject, switchMap, tap } from "rxjs";
 import { TuiFileLike } from "@taiga-ui/kit";
 import { MeshStore } from "../../stores/mesh.store";
 import { MeshProcessingService } from "../../services/mesh-processing.service";
@@ -11,10 +11,14 @@ import {
     PrintModelDetailsRespDto,
     PrintQuality,
     PrintSettingsDto,
-    PrintStrength
+    PrintStrength,
+    PRINT_QUALITY_NORMAL_MAP_SCALE
 } from "@printnuts/common";
 import { MaterialService } from "../../services/material.service";
 import { isDark, isNonNull } from "../../../common/util/common.util";
+import { DEFAULT_PRINT_QUALITY, DEFAULT_PRINT_STRENGTH } from "../../util/model-viewer.constants";
+import { tuiIsMobile } from "@taiga-ui/core";
+import { TUI_IS_MOBILE } from "@taiga-ui/cdk";
 
 @Component({
     selector: "haus-model-upload",
@@ -26,6 +30,8 @@ export class ModelUploadComponent implements OnInit {
     protected readonly FIELDS = PrintUploadFormFields;
     protected readonly isNonNull = isNonNull;
     protected readonly isDark = isDark;
+    protected readonly PRINT_QUALITY_NORMAL_MAP_SCALE = PRINT_QUALITY_NORMAL_MAP_SCALE;
+    protected readonly DEFAULT_PRINT_QUALITY = DEFAULT_PRINT_QUALITY;
 
     @Input() styleClass: string = "";
     @Input() maxFileSize: number = 64 * 1000 * 1000; // 64 MB
@@ -49,15 +55,19 @@ export class ModelUploadComponent implements OnInit {
     qualityList: PrintQuality[] = Object.values(PrintQuality);
     strengthList: PrintStrength[] = Object.values(PrintStrength);
 
+    normalMapScale$: Observable<number>;
+
     constructor(private meshStore: MeshStore,
                 private meshProcessingService: MeshProcessingService,
-                private materialService: MaterialService) {
+                private materialService: MaterialService,
+                @Inject(TUI_IS_MOBILE) readonly isMobile: boolean) {
     }
 
     ngOnInit(): void {
         this.buildSettingsFormGroup();
         this.bindFileChanges();
         this.bindFormCompletion();
+        this.bindQualityToNormalMapChanges();
         this.loadMaterials();
     }
 
@@ -65,8 +75,8 @@ export class ModelUploadComponent implements OnInit {
         let controls: any = {};
         controls[PrintUploadFormFields.FILE] = new FormControl<TuiFileLike | null>(null, [Validators.required]);
         controls[PrintUploadFormFields.MATERIAL] = new FormControl<string>("", [Validators.required]);
-        controls[PrintUploadFormFields.QUALITY] = new FormControl<PrintQuality>(PrintQuality.NORMAL, [Validators.required]);
-        controls[PrintUploadFormFields.STRENGTH] = new FormControl<PrintStrength>(PrintStrength.NORMAL, [Validators.required]);
+        controls[PrintUploadFormFields.QUALITY] = new FormControl<PrintQuality>(DEFAULT_PRINT_QUALITY, [Validators.required]);
+        controls[PrintUploadFormFields.STRENGTH] = new FormControl<PrintStrength>(DEFAULT_PRINT_STRENGTH, [Validators.required]);
 
         this.printForm = new FormGroup<any>(controls);
     }
@@ -101,14 +111,25 @@ export class ModelUploadComponent implements OnInit {
                     const strength: PrintStrength = this.printForm.get(PrintUploadFormFields.STRENGTH)?.value;
 
                     this.loadingPrintDetails = true;
-                    return this.meshProcessingService.getModelDetails(file, material._id, new PrintSettingsDto(quality, strength)).pipe(
-                        finalize(() => this.loadingPrintDetails = false)
+                    return this.meshProcessingService.getModelDetails(file, material.id, new PrintSettingsDto(quality, strength)).pipe(
+                        finalize(() => this.loadingPrintDetails = false),
+                        catchError(() => {
+                            return of(null);
+                        })
                     );
                 } else {
                     return of(null);
                 }
             })
         );
+    }
+
+    private bindQualityToNormalMapChanges(): void {
+        this.normalMapScale$ = this.printForm.get(PrintUploadFormFields.QUALITY)!.valueChanges.pipe(
+            map((quality: PrintQuality) => {
+                return PRINT_QUALITY_NORMAL_MAP_SCALE[quality] || PRINT_QUALITY_NORMAL_MAP_SCALE[DEFAULT_PRINT_QUALITY];
+            })
+        )
     }
 
     private loadMaterials(): void {
@@ -135,4 +156,5 @@ export class ModelUploadComponent implements OnInit {
         this.rejectedFile$.next(null);
     }
 
+    protected readonly tuiIsMobile = tuiIsMobile;
 }

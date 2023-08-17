@@ -29,13 +29,6 @@ export class DashboardIntroComponent implements OnInit {
     protected arrowIconState: 'up' | 'down' = 'up';
 
     ngOnInit(): void {
-        AOS.init({
-            easing: "ease-in-out",
-            mirror: false,
-            once: false,
-            duration: 1000,
-            delay: 100,
-        });
     }
 
     toggleArrowState() {

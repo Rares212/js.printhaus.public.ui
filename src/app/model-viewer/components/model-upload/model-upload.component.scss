@@ -1,24 +1,8 @@
-.control {
-  margin: 1rem;
+.details-fixed-height {
+  height: 100px;
 }
 
-.settings-container {
-  max-width: 30.25rem;
+.buy-button {
+    width: 33.33%;
+    min-width: 170px;
 }
-
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.material-tag {
-  min-width: 64px;
-}
-
-.cost-chart {
-    position: absolute;
-}
-

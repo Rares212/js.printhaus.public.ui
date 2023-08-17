@@ -2,48 +2,96 @@
     {
         "id": "1",
         "name": "Rocktopus",
-        "description": "Printed in: Pastel Green PLA",
+        "description": null,
         "img": "assets/img/gallery-mock-1.jpg",
+        "materialName": "Pastel Green",
+        "materialType": "PLA",
+        "color": "#00ff00",
+        "dimensions": {
+            "width": "30",
+            "height": "20",
+            "depth": "30"
+        },
         "costAmount": "1250",
         "costCurrency": "RON"
     },
     {
         "id": "2",
         "name": "Flexible shoes",
-        "description": "Printed in: Black Nylon",
+        "description": null,
         "img": "assets/img/gallery-mock-2.jpg",
+        "materialName": "Black",
+        "materialType": "Nylon",
+        "color": "#000000",
+        "dimensions": {
+            "width": "30",
+            "height": "10",
+            "depth": "120"
+        },
         "costAmount": "2000",
         "costCurrency": "RON"
     },
     {
         "id": "3",
         "name": "Skull decoration",
-        "description": "Printed in: Marble White PLA",
+        "description": null,
         "img": "assets/img/gallery-mock-3.jpg",
+        "materialName": "Marble White",
+        "materialType": "PLA",
+        "color": "#ffffff",
+        "dimensions": {
+            "width": "125",
+            "height": "114",
+            "depth": "127"
+        },
         "costAmount": "2500",
         "costCurrency": "RON"
     },
     {
-        "id": "Octopus",
-        "name": "Gallery 1",
-        "description": "Printed in: Azure Blue PETG",
+        "id": "4",
+        "name": "Octopus",
+        "description": null,
         "img": "assets/img/gallery-mock-4.jpg",
+        "materialName": "Azure Blue",
+        "materialType": "PETG",
+        "color": "#0000ff",
+        "dimensions": {
+            "width": "46",
+            "height": "32",
+            "depth": "46"
+        },
         "costAmount": "1250",
         "costCurrency": "RON"
     },
     {
         "id": "5",
         "name": "Groot",
-        "description": "Printed in: Wood PLA",
+        "description": null,
         "img": "assets/img/gallery-mock-5.jpg",
+        "materialName": "Wood",
+        "materialType": "PLA",
+        "color": "#8b4513",
+        "dimensions": {
+            "width": "43",
+            "height": "265",
+            "depth": "65"
+        },
         "costAmount": "3500",
         "costCurrency": "RON"
     },
     {
         "id": "6",
         "name": "Scorpion",
-        "description": "Printed in: Blue PLA",
+        "description": null,
         "img": "assets/img/gallery-mock-6.jpg",
+        "materialName": "Blue",
+        "materialType": "PLA",
+        "color": "#0000ff",
+        "dimensions": {
+            "width": "72",
+            "height": "36",
+            "depth": "83"
+        },
         "costAmount": "2500",
         "costCurrency": "RON"
     }

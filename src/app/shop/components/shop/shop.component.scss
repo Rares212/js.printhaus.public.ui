@@ -12,3 +12,12 @@
 .gallery-item {
   box-sizing: border-box;
 }
+
+.item-details-container {
+    width: 90%;
+}
+
+.small-font {
+    font: var(--tui-font-text-s);
+    vertical-align: middle;
+}

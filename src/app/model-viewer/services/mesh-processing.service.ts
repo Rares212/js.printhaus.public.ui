@@ -20,7 +20,7 @@ import {
   PrintQuality,
   PrintSettingsDto,
   PrintStrength,
-  SupportedFileTypes
+  SupportedMeshFileTypes
 } from '@printnuts/common';
 import {gzipSync} from "fflate"
 import {HttpClient} from "@angular/common/http";
@@ -56,13 +56,13 @@ export class MeshProcessingService {
 
     const fileType: string = getFileType(file.name)!;
     switch (fileType.toLowerCase()) {
-      case SupportedFileTypes.STL: {
+      case SupportedMeshFileTypes.STL: {
         return from((file as File).arrayBuffer()).pipe(
           map(buffer => this.parseStl(buffer)),
           map(buffer => this.meshFromGeometry(buffer, material!, centered))
         );
       }
-      case SupportedFileTypes.OBJ: {
+      case SupportedMeshFileTypes.OBJ: {
         return from((file as File).arrayBuffer()).pipe(
           map(buffer => this.parseObj(buffer)),
           map(buffer => this.meshFromGeometry(buffer, material!, centered))
@@ -77,7 +77,7 @@ export class MeshProcessingService {
   public getModelDetails(file: TuiFileLike, materialId: string, printSettings: PrintSettingsDto): Observable<PrintModelDetailsRespDto> {
     const apiUrl = 'printnuts-api/print/model-details';
 
-    const fileType: SupportedFileTypes = getFileType(file.name)! as SupportedFileTypes;
+    const fileType: SupportedMeshFileTypes = getFileType(file.name)! as SupportedMeshFileTypes;
 
     return from((file as File).arrayBuffer()).pipe(
       map(buffer => gzipSync(new Uint8Array(buffer), {mtime: 0})),

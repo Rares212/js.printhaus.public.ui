@@ -5,7 +5,7 @@ import { DashboardIntroComponent } from "./components/dashboard-intro/dashboard-
 import { NgParticlesModule } from "ng-particles";
 import { TuiTagModule } from "@taiga-ui/kit";
 import { ModelViewerModule } from "../model-viewer/model-viewer.module";
-import { GalleryModule } from "../gallery/gallery.module";
+import { ShopModule } from "../shop/shop.module";
 
 @NgModule({
     declarations: [
@@ -17,7 +17,7 @@ import { GalleryModule } from "../gallery/gallery.module";
         NgParticlesModule,
         TuiTagModule,
         ModelViewerModule,
-        GalleryModule
+        ShopModule
     ],
     exports: [
         DashboardPage

@@ -49,6 +49,7 @@
     "ngx-page-scroll": "^11.0.0",
     "ngx-page-scroll-core": "^11.0.0",
     "rxjs": "~7.8.0",
+    "subsink": "^1.0.2",
     "three": "^0.155.0",
     "ts-cacheable": "^1.0.9",
     "tslib": "^2.6.1",

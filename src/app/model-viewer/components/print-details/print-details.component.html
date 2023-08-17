@@ -1,35 +1,44 @@
-<div class="container justify-content-between tui-space_left-3 tui-space_right-3">
+<div [class]="'container justify-content-between tui-space_left-3 tui-space_right-3 ' + styleClass">
     <div class="row">
-        <div #printDimension *ngIf="printDimensions" class="col">
-            {{(printDimensions.x | number:'1.0-0') + ' x ' + (printDimensions.y | number:'1.0-0') + ' x ' + (printDimensions.z | number:'1.0-0') + ' mm'}}
+        <div #printDimension *ngIf="printDimensions" class="col-4 position-relative">
+            <p>{{(printDimensions.x | number:'1.0-0') + ' x ' + (printDimensions.y | number:'1.0-0') + ' x ' + (printDimensions.z | number:'1.0-0') + ' mm'}}</p>
+            <div *ngIf="printDetails" class="tui-space_top-3">
+                <label tuiLabel="Show cost info">
+                    <tui-toggle size="l" [formControl]="showCostInfoControl">
+                    </tui-toggle>
+                </label>
+            </div>
 
-            <tui-ring-chart *ngIf="printDetails"
+            <tui-ring-chart *ngIf="printDetails && showCostInfoControl.value"
                             [value]="costChartValues"
                             [(activeItemIndex)]="activeCostChartIndex"
-                            class="cost-chart">
-                <tui-money [value]="sum / 100" [currency]="costChartCurrency">
+                            size="m"
+                            class="cost-chart bg-white rounded-circle">
+                <tui-money [value]="sum / 100" [currency]="costChartCurrency" [precision]="2" decimal="always">
                 </tui-money>
                 <div>{{ label }}</div>
             </tui-ring-chart>
+
         </div>
 
-        <div *ngIf="printDetails" class="col d-flex flex-column">
-            <div #printData class="tui-form__row tui-form__row_multi-fields">
-                <div class="tui-form__multi-field">
+        <div *ngIf="printDetails" class="col-8 d-flex flex-column">
+            <div #printData class="d-flex flex-row justify-content-end flex-wrap">
+                <div class="tui-space_horizontal-2">
                     <label tuiLabel="Cost">
                         <tui-money [currency]="printDetails.cost.currency"
-                                   [value]="printDetails.cost.amount / 100">
+                                   [value]="printDetails.cost.amount / 100"
+                                   [colored]="false">
                         </tui-money>
                     </label>
                 </div>
 
-                <div class="tui-form__multi-field">
+                <div class="tui-space_horizontal-2">
                     <label tuiLabel="Weight">
                         {{(printDetails.grams | number:'1.0-0') + 'g'}}
                     </label>
                 </div>
 
-                <div class="tui-form__multi-field">
+                <div class="tui-space_horizontal-2">
                     <label tuiLabel="Print time" class="text-nowrap">
                         {{(printDetails.estimatedPrintTimeHours | hourToTime) + 'h'}}
                     </label>

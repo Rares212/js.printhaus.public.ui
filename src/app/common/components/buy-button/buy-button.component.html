@@ -1,0 +1,39 @@
+<button *ngIf="!(showQuantityControl$ | async)"
+        tuiButton type="button"
+        [@fadeInOut]="'in'"
+        [class]="styleClass + 'text-nowrap'"
+        [size]="size"
+        [icon]="cartIcon"
+        [disabled]="disabled"
+        [showLoader]="loading"
+        (click)="onBuyClick()">
+
+    {{label}}
+
+</button>
+
+<div *ngIf="showQuantityControl$ | async"
+     tuiGroup class="group"
+     [@fadeInOut]="'in'">
+    <tui-input-number [formControl]="totalCostControl"
+                      class="total-cost-input"
+                      [readOnly]="true"
+                      [tuiTextfieldSize]="size">
+        {{'Cost( ' + (costCurrency | tuiCurrency) + ')'}}
+    </tui-input-number>
+
+    <tui-input-number class="tui-group__auto-width-item"
+                      [tuiTextfieldSize]="size"
+                      [formControl]="quantityControl"
+                      decimal="never"
+                      [min]="0"
+                      [step]="1">
+        #&nbsp;
+    </tui-input-number>
+</div>
+
+
+
+<ng-template #cartIcon>
+    <i class="bi bi-cart4"></i>
+</ng-template>

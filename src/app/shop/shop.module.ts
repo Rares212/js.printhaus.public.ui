@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { GalleryComponent } from './components/gallery/gallery.component';
+import { ShopComponent } from './components/shop/shop.component';
 import { NutCommonModule } from "../common/nut-common.module";
 import { NgOptimizedImage } from "@angular/common";
 import { TuiElasticContainerModule, TuiPaginationModule } from "@taiga-ui/kit";
@@ -8,10 +8,10 @@ import { TuiElasticContainerModule, TuiPaginationModule } from "@taiga-ui/kit";
 
 @NgModule({
     declarations: [
-        GalleryComponent
+        ShopComponent
     ],
     exports: [
-        GalleryComponent
+        ShopComponent
     ],
     imports: [
         NutCommonModule,
@@ -20,4 +20,4 @@ import { TuiElasticContainerModule, TuiPaginationModule } from "@taiga-ui/kit";
         TuiElasticContainerModule
     ]
 })
-export class GalleryModule { }
+export class ShopModule { }

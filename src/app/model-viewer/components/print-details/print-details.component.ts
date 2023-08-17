@@ -1,15 +1,18 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { PrintModelDetailsRespDto } from "@printnuts/common";
 import { Vector3 } from "three";
+import { FormControl } from "@angular/forms";
 
 @Component({
     selector: "haus-print-details",
     templateUrl: "./print-details.component.html",
-    styleUrls: ["./print-details.component.scss"],
+    styleUrls: ["./print-details.component.scss",
+                "./print-details.component.less"],
 })
 export class PrintDetailsComponent implements OnChanges {
     protected readonly NaN = NaN;
 
+    @Input() styleClass: string = '';
     @Input() printDimensions: Vector3 | null;
     @Input() printDetails: PrintModelDetailsRespDto | null;
 
@@ -18,6 +21,8 @@ export class PrintDetailsComponent implements OnChanges {
     protected costChartTotal: number;
     protected costChartCurrency: string;
     protected activeCostChartIndex: number = NaN;
+
+    protected showCostInfoControl = new FormControl<boolean>(false);
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['printDetails'] && changes['printDetails'].currentValue) {
@@ -39,5 +44,13 @@ export class PrintDetailsComponent implements OnChanges {
 
     get label(): string {
         return Number.isNaN(this.activeCostChartIndex) ? 'Total' : this.costChartLabels[this.activeCostChartIndex];
+    }
+
+    getColor(index: number): string {
+        return `var(--tui-chart-${index})`;
+    }
+
+    onHover(index: number, hovered: boolean): void {
+        this.activeCostChartIndex = hovered ? index : 0;
     }
 }
