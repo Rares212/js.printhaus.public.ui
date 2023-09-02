@@ -1,20 +1,23 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import {DashboardPage} from "./dashboard/pages/dashboard/dashboard.page";
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { SECTIONS_METADATA } from "./seo/models/sections.metadata";
 
 const routes: Routes = [
-  {
-    path: '',
-    component: DashboardPage
-  },
-  {
-    path: '**',
-    component: DashboardPage
-  }
+    {
+        path: SECTIONS_METADATA.dashboard.path,
+        data: SECTIONS_METADATA.dashboard.meta,
+        loadChildren: () => import("./dashboard/dashboard.module").then(m => m.DashboardModule)
+    },
+    {
+        path: SECTIONS_METADATA.shop.path,
+        data: SECTIONS_METADATA.shop.meta,
+        loadChildren: () => import("./cart/cart.module").then(m => m.CartModule)
+    }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

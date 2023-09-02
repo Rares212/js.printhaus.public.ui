@@ -1,7 +1,7 @@
 import { Component, Inject, Input, OnInit } from "@angular/core";
 import { Box3, Mesh, Vector3 } from "three";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { catchError, finalize, map, Observable, of, Subject, switchMap, tap } from "rxjs";
+import { catchError, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap, tap } from "rxjs";
 import { TuiFileLike } from "@taiga-ui/kit";
 import { MeshStore } from "../../stores/mesh.store";
 import { MeshProcessingService } from "../../services/mesh-processing.service";

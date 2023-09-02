@@ -1,19 +1,26 @@
 import { NgModule } from "@angular/core";
 import { AppComponent } from "./app.component";
-import { NutCommonModule } from "./common/nut-common.module";
+import { HttpLoaderFactory, NutCommonModule } from "./common/nut-common.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
 import { TUI_SANITIZER } from "@taiga-ui/core";
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
-import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClient } from "@angular/common/http";
 import { HttpErrorInterceptor } from "./common/interceptors/http-error.interceptor";
+import { BrowserModule } from "@angular/platform-browser";
+import { RouterOutlet } from "@angular/router";
+import { AppRoutingModule } from "./app-routing.module";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
     declarations: [
         AppComponent
     ],
     imports: [
-        DashboardModule,
-        NutCommonModule
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        NutCommonModule,
     ],
     providers: [
         {

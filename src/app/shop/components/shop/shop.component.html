@@ -1,80 +1,85 @@
-<div class="haus-card subtle-shadow-static w-100
+<div class="w-100 text-center limited-width">
+    <div class="haus-card subtle-shadow-static rounded-bottom-0 top-header
+                d-flex flex-column justify-content-center align-items-center">
+        <h3 class="text-center ">Begin your 3D journey</h3>
+        <h4 class="tui-space_top-3 text-center">Quality Prints | Friendly Prices</h4>
+    </div>
+
+    <div class="haus-card subtle-shadow-static w-100 rounded-top-0
             d-flex flex-column justify-content-center align-items-center ">
-    <div>
-        <h4 class="text-center">Begin Your 3D Journey</h4>
-        <h5 class="tui-space_top-3 text-center">Quality Prints | Friendly Prices</h5>
-        <hr class="title-divider">
-    </div>
-
-    <div tuiCarouselButtons class="d-flex flex-row justify-content-center align-items-center w-100">
-        <div>
-            <button tuiIconButton
-                    class="flex-grow-1"
-                    icon="tuiIconChevronLeftLarge"
-                    title="Previous" type="button"
-                    (click)="activeIndex = activeIndex - 1; autoScroll = false">
-            </button>
-        </div>
-        <div #carouselParent class="flex-grow-1 min-width-zero">
-            <tui-loader [showLoader]="loadingItems" class="w-100">
-                <tui-carousel #carousel class="carousel"
-                              [itemsCount]="visibleItemCount"
-                              [(index)]="activeIndex"
-                              [draggable]="true"
-                              [duration]="autoScroll ? 3000 : 0"
-                              (click)="autoScroll=false">
-                    <ng-container *ngFor="let item of (galleryItems$ | async); let i = index">
-                        <tui-island *tuiItem
-                                    size="m"
-                                    class="d-flex flex-column justify-content-center align-items-center
+        <div tuiCarouselButtons class="d-flex flex-row justify-content-center align-items-center w-100">
+            <div>
+                <button tuiIconButton
+                        class="flex-grow-1"
+                        icon="tuiIconChevronLeftLarge"
+                        title="Previous" type="button"
+                        (click)="activeIndex = activeIndex - 1; autoScroll = false">
+                </button>
+            </div>
+            <div #carouselParent class="flex-grow-1 min-width-zero">
+                <tui-loader [showLoader]="loadingItems" class="w-100">
+                    <tui-carousel #carousel class="carousel"
+                                  [itemsCount]="visibleItemCount"
+                                  [(index)]="activeIndex"
+                                  [draggable]="isMobile"
+                                  [duration]="autoScroll ? 3000 : 0"
+                                  (click)="autoScroll=false">
+                        <ng-container *ngFor="let item of (galleryItems$ | async); let i = index">
+                            <tui-island *tuiItem
+                                        size="m"
+                                        class="d-flex flex-column justify-content-center align-items-center
                                                    very-subtle-shadow m-4
+                                                   
                                                    align-self-center gallery-item"
-                                    [class.item_active]="i === activeIndex + 1"
-                                    [ngStyle]="{'width': cardWidth + 'px'}">
-                            <h2 class="tui-island__title text-center">{{item.name}}</h2>
-                            <img [ngSrc]="item.img"
-                                 class="island-rounding"
-                                 [width]="imageWidth" [height]="imageHeight"
-                                 [draggable]="false">
-                            <div class="d-flex flex-column justify-content-center align-items-center tui-space_vertical-2 item-details-container">
-                                <haus-material-tag [size]="isMobile ? 'm' : 'l'"
-                                                   [name]="item.materialName + ' ' + item.materialType"
-                                                   [color]="item.color">
-                                </haus-material-tag>
-                                <div class="d-flex row justify-content-center align-items-center">
-                                    <p class="small-font m-0">
-                                        {{(item.dimensions.width / 10 | number:'1.0-0') + 'x' +
-                                          (item.dimensions.depth / 10 | number:'1.0-0') + 'x' +
-                                          (item.dimensions.height / 10 | number:'1.0-0') + 'cm'}}
-                                    </p>
+                                        [class.item_active]="i === activeIndex + 1"
+                                        [ngStyle]="{'width': cardWidth + 'px'}">
+                                <h2 class="tui-island__title text-center">{{item.name}}</h2>
+                                <img [ngSrc]="item.img"
+                                     class="island-rounding object-fit-cover"
+                                     [width]="imageWidth" [height]="imageHeight"
+                                     [draggable]="false">
+                                <div
+                                    class="d-flex flex-column justify-content-center align-items-center tui-space_vertical-2 item-details-container">
+                                    <haus-material-tag [size]="isMobile ? 'm' : 'l'"
+                                                       [name]="item.materialName + ' ' + item.materialType"
+                                                       [color]="item.color">
+                                    </haus-material-tag>
+                                    <div class="d-flex row justify-content-center align-items-center">
+                                        <p class="small-font m-0">
+                                            {{(item.dimensions.width / 10 | number:'1.0-0') + 'x' +
+                                        (item.dimensions.depth / 10 | number:'1.0-0') + 'x' +
+                                        (item.dimensions.height / 10 | number:'1.0-0') + 'cm'}}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <tui-money [value]="item.costAmount / 100"
-                                       [currency]="item.costCurrency">
-                            </tui-money>
-                            <div class="tui-space_top-2">
-                                <haus-buy-button [unitCost]="item.costAmount / 100"
-                                                 [costCurrency]="item.costCurrency"
-                                                 label="Buy"
-                                                 size="m">
-                                </haus-buy-button>
-                            </div>
-                        </tui-island>
-                    </ng-container>
-                </tui-carousel>
-            </tui-loader>
-        </div>
-        <div>
-            <button tuiIconButton
-                    class="flex-grow-1"
-                    type="button"
-                    icon="tuiIconChevronRightLarge"
-                    title="Next"
-                    (click)="activeIndex = activeIndex + 1; autoScroll = false">
-            </button>
+                                <tui-money [value]="item.costAmount / 100"
+                                           [currency]="item.costCurrency">
+                                </tui-money>
+                                <div class="tui-space_top-2">
+                                    <haus-buy-button [unitCost]="item.costAmount / 100"
+                                                     [costCurrency]="item.costCurrency"
+                                                     label="Buy"
+                                                     size="m">
+                                    </haus-buy-button>
+                                </div>
+                            </tui-island>
+                        </ng-container>
+                    </tui-carousel>
+                </tui-loader>
+            </div>
+            <div>
+                <button tuiIconButton
+                        class="flex-grow-1"
+                        type="button"
+                        icon="tuiIconChevronRightLarge"
+                        title="Next"
+                        (click)="activeIndex = activeIndex + 1; autoScroll = false">
+                </button>
+            </div>
         </div>
     </div>
+
 </div>
 
 <ng-template #cartIcon>

@@ -14,9 +14,6 @@ import {
     TuiTextfieldControllerModule, TuiTooltipModule
 } from "@taiga-ui/core";
 import { NutToolbarComponent } from "./components/toolbar/nut-toolbar.component";
-import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { AppRoutingModule } from "../app-routing.module";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import {
     TuiAccordionModule,
@@ -46,6 +43,8 @@ import { TuiCurrencyPipeModule, TuiMoneyModule } from "@taiga-ui/addon-commerce"
 import { BuyButtonComponent } from './components/buy-button/buy-button.component';
 import { TuiLegendItemModule, TuiRingChartModule } from "@taiga-ui/addon-charts";
 import { MaterialTagComponent } from './components/material-tag/material-tag.component';
+import { CommonModule } from "@angular/common";
+import { RouterLink, RouterModule } from "@angular/router";
 
 @NgModule({
     declarations: [
@@ -56,9 +55,7 @@ import { MaterialTagComponent } from './components/material-tag/material-tag.com
         MaterialTagComponent
     ],
     exports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
+        CommonModule,
         TuiRootModule,
         NgbModule,
         NutToolbarComponent,
@@ -118,18 +115,10 @@ import { MaterialTagComponent } from './components/material-tag/material-tag.com
         MaterialTagComponent
     ],
     imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
+        CommonModule,
+        RouterModule,
         TuiRootModule,
         NgbModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            }
-        }),
         TuiTabsModule,
         TuiInputNumberModule,
         TuiButtonModule,
@@ -138,11 +127,11 @@ import { MaterialTagComponent } from './components/material-tag/material-tag.com
         TuiGroupModule,
         ReactiveFormsModule,
         TuiLabelModule,
-        BrowserAnimationsModule,
         FormsModule,
         TuiTextfieldControllerModule,
         TuiCurrencyPipeModule,
-        TuiTagModule
+        TuiTagModule,
+        TuiSvgModule,
     ]
 })
 export class NutCommonModule {

@@ -1,11 +1,8 @@
 import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { tuiInputNumberOptionsProvider } from "@taiga-ui/kit";
-import { TUI_IS_MOBILE } from "@taiga-ui/cdk";
 import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, Observable, of, tap } from "rxjs";
 import { SubSink } from "subsink";
-import { isNonNull } from "../../util/common.util";
-import { animate, state, style, transition, trigger } from "@angular/animations";
+import { animate, group, query, state, style, transition, trigger } from "@angular/animations";
 
 @Component({
     selector: "haus-buy-button",
@@ -13,15 +10,19 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
     styleUrls: ["./buy-button.component.scss"],
     animations: [
         trigger('fadeInOut', [
-            state('void', style({ opacity: 0, height: '0px', overflow: 'hidden', position: 'absolute', width: '100%' })),
-            state('*', style({ opacity: 1, height: '*', overflow: 'hidden', position: 'relative' })),
-            transition(':enter', [
-                style({ opacity: 0, height: '0px', overflow: 'hidden', position: 'absolute', width: '100%' }),
+            state('void', style({
+                opacity: 0,
+                width: '0px',
+                display: 'hidden'
+            })),
+            state('*', style({
+                opacity: 1,
+                width: '*',
+                display: '*'
+            })),
+            transition('void <=> *', [
                 animate(200)
             ]),
-            transition(':leave',
-                animate(200, style({ opacity: 0, height: '0px', overflow: 'hidden', position: 'absolute', width: '100%' }))
-            )
         ])
     ]
 })
@@ -48,7 +49,7 @@ export class BuyButtonComponent implements OnInit, OnDestroy {
 
     protected showQuantityControl$: Observable<boolean>;
 
-    protected quantityControl = new FormControl(1,
+    protected quantityControl = new FormControl<number>(1,
         [Validators.required]);
 
     protected totalCostControl = new FormControl<number>(0);
@@ -68,6 +69,10 @@ export class BuyButtonComponent implements OnInit, OnDestroy {
             map(([quantity, unitCost]) => (quantity || 0) * unitCost)
         ).subscribe(totalCost => this.totalCostControl.setValue(totalCost));
 
+        this.quantityControl.valueChanges.subscribe(
+            value => console.log(value)
+        )
+
         // this.subs.sink = this.quantityControl.valueChanges.pipe(
         //     filter(value => !isNonNull(value)),
         // ).subscribe(() => this.quantityControl.setValue(0));
@@ -82,6 +87,10 @@ export class BuyButtonComponent implements OnInit, OnDestroy {
 
     onBuyClick(): void {
         this.quantityControl.setValue(1);
+    }
+
+    logTest(event: any) {
+        console.log(event);
     }
 
 

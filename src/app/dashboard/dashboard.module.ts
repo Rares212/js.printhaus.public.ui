@@ -6,6 +6,7 @@ import { NgParticlesModule } from "ng-particles";
 import { TuiTagModule } from "@taiga-ui/kit";
 import { ModelViewerModule } from "../model-viewer/model-viewer.module";
 import { ShopModule } from "../shop/shop.module";
+import { DashboardRoutingModule } from './dashboard-routing.module';
 
 @NgModule({
     declarations: [
@@ -17,7 +18,8 @@ import { ShopModule } from "../shop/shop.module";
         NgParticlesModule,
         TuiTagModule,
         ModelViewerModule,
-        ShopModule
+        ShopModule,
+        DashboardRoutingModule
     ],
     exports: [
         DashboardPage

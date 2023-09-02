@@ -11,7 +11,7 @@ import {
 } from "@angular/core";
 import { ShopService } from "../../services/shop.service";
 import { finalize, map, Observable, shareReplay, tap } from "rxjs";
-import { GalleryItemDto, PaginatedRequestDto } from "@printnuts/common";
+import { PaginatedRequestDto, ShopItemDto } from "@printnuts/common";
 import { isNonNull } from "../../../common/util/common.util";
 import { TUI_IS_MOBILE } from "@taiga-ui/cdk";
 
@@ -31,11 +31,13 @@ export class ShopComponent implements OnInit, AfterViewInit {
     protected readonly imageHeight: number = 0.8 * this.cardWidth;
     protected visibleItemCount: number = 0;
 
-    protected galleryItems$: Observable<GalleryItemDto[]>;
+    protected galleryItems$: Observable<ShopItemDto[]>;
     protected itemCount: number = 0;
     protected loadingItems: boolean = false;
 
     private _activeIndex: number = 0;
+
+    private resizeObserver: ResizeObserver;
 
     get activeIndex(): number {
         return this._activeIndex;
@@ -74,24 +76,22 @@ export class ShopComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.calculateDimensions();
-    }
 
-    @HostListener('window:resize', ['$event'])
-    onResize(event: any) {
-        this.calculateDimensions();
-    }
+        this.resizeObserver = new ResizeObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.target === this.carouselParent.nativeElement) {
+                    this.calculateDimensions();
+                }
+            });
+        });
 
-    // onIndexChange(index: number): void {
-    //     // Make sure there are always items displayed by forcing a circular rotation at the end of the gallery
-    //     if (this.itemCount - index < this.visibleItemCount) {
-    //         this.activeIndex = 0
-    //     }
-    // }
+        this.resizeObserver.observe(this.carouselParent.nativeElement);
+    }
 
     private calculateDimensions(): void {
         this.parentWidth = this.carouselParent.nativeElement.offsetWidth;
         this.visibleItemCount = Math.floor((this.parentWidth + this.padding) / (this.cardWidth + this.padding));
+        // Force recalculation of activeIndex
+        this.activeIndex = this.activeIndex;
     }
-
-
 }

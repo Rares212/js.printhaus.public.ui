@@ -1,6 +1,6 @@
-<button *ngIf="!(showQuantityControl$ | async)"
+<button #buyButton
+        [@fadeInOut]="(showQuantityControl$ | async) ? 'void' : '*'"
         tuiButton type="button"
-        [@fadeInOut]="'in'"
         [class]="styleClass + 'text-nowrap'"
         [size]="size"
         [icon]="cartIcon"
@@ -9,12 +9,11 @@
         (click)="onBuyClick()">
 
     {{label}}
-
 </button>
 
-<div *ngIf="showQuantityControl$ | async"
-     tuiGroup class="group"
-     [@fadeInOut]="'in'">
+<div #quantitySelect
+     [@fadeInOut]="!(showQuantityControl$ | async) ? 'void' : '*'"
+     tuiGroup class="group">
     <tui-input-number [formControl]="totalCostControl"
                       class="total-cost-input"
                       [readOnly]="true"
@@ -31,8 +30,6 @@
         #&nbsp;
     </tui-input-number>
 </div>
-
-
 
 <ng-template #cartIcon>
     <i class="bi bi-cart4"></i>
