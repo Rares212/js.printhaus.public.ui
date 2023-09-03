@@ -15,5 +15,9 @@ export const environment = {
                 }
             }
         }
+    },
+    auth: {
+        domain: 'printhaus-dev.eu.auth0.com',
+        clientId: 'NapC18pVs9ddKQf4XbVwqrHdC0bCePdp',
     }
 };

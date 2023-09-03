@@ -1,0 +1,40 @@
+<tui-hosted-dropdown tuiDropdownAlign="right"
+                     tuiDropdownHover
+                     [content]="dropdownContent"
+                     [(open)]="dropdownOpen">
+    <div class="d-flex justify-content-center align-items-center">
+        <tui-avatar [rounded]="false"
+                    class="rounded-end-0"
+                    [autoColor]="true"
+                    [size]="size"
+                    [avatarUrl]="(user$ | async) ? null : 'tuiIconUser'"
+                    [text]="(user$ | async) ? (user$ | async)?.family_name + ' ' + (user$ | async)?.given_name : ''">
+        </tui-avatar>
+        <button tuiButton
+                class="rounded-start-0"
+                appearance="outline"
+                [iconRight]="arrow"
+                [pseudoActive]="dropdownOpen || null"
+                [size]="size">
+            My account
+        </button>
+    </div>
+
+</tui-hosted-dropdown>
+
+<ng-template #dropdownContent>
+    <tui-data-list>
+        <button *ngIf="!(isAuthenticated$ | async)" tuiOption
+                (click)="login()">
+            Sign In
+        </button>
+        <button *ngIf="!(isAuthenticated$ | async)" tuiOption
+                (click)="signup()">
+            Register
+        </button>
+        <button *ngIf="isAuthenticated$ | async" tuiOption
+                (click)="logout()">
+            Logout
+        </button>
+    </tui-data-list>
+</ng-template>

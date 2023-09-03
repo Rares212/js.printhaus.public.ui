@@ -17,7 +17,7 @@ import { NutToolbarComponent } from "./components/toolbar/nut-toolbar.component"
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import {
     TuiAccordionModule,
-    TuiActionModule, TuiBadgeModule, TuiCarouselModule,
+    TuiActionModule, TuiAvatarModule, TuiBadgeModule, TuiCarouselModule,
     TuiCheckboxBlockModule,
     TuiDataListWrapperModule, TuiElasticContainerModule,
     TuiFieldErrorPipeModule,
@@ -45,6 +45,8 @@ import { TuiLegendItemModule, TuiRingChartModule } from "@taiga-ui/addon-charts"
 import { MaterialTagComponent } from './components/material-tag/material-tag.component';
 import { CommonModule } from "@angular/common";
 import { RouterLink, RouterModule } from "@angular/router";
+import { AppAuthModule } from "../app-auth/app-auth.module";
+import { TuiMobileTabsModule } from "@taiga-ui/addon-mobile";
 
 @NgModule({
     declarations: [
@@ -112,6 +114,7 @@ import { RouterLink, RouterModule } from "@angular/router";
         TuiTabsModule,
         TuiInputNumberModule,
         TuiCurrencyPipeModule,
+        TuiAvatarModule,
         MaterialTagComponent
     ],
     imports: [
@@ -132,6 +135,8 @@ import { RouterLink, RouterModule } from "@angular/router";
         TuiCurrencyPipeModule,
         TuiTagModule,
         TuiSvgModule,
+        AppAuthModule,
+        TuiMobileTabsModule
     ]
 })
 export class NutCommonModule {

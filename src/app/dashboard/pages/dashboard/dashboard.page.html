@@ -5,18 +5,18 @@
 </ng-particles>
 
 <div class="parent-snap-scroll vh-100">
-    <section #welcome class="fullscreen child-snap-scroll position-relative flex-1">
+    <section #welcome id="welcome" class="fullscreen child-snap-scroll position-relative flex-1">
         <nut-dashboard-intro styleClass="w-100 h-100 px-2"></nut-dashboard-intro>
     </section>
 
-    <section #modelUpload class="fullscreen child-snap-scroll position-relative toolbar-aware-padding
+    <section #modelUpload id="modelUpload" class="fullscreen child-snap-scroll position-relative toolbar-aware-padding
                     d-flex flex-column justify-content-center align-items-center">
             <haus-model-upload class="model-upload-container flex-fill min-height-0
                                       m-3 m-lg-4 m-xl-5">
             </haus-model-upload>
     </section>
 
-    <section #shop class="fullscreen child-snap-scroll position-relative toolbar-aware-padding
+    <section #shop id="shop" class="fullscreen child-snap-scroll position-relative toolbar-aware-padding
                     d-flex flex-column justify-content-center align-items-center">
         <haus-shop class="shop-container flex-fill
                              d-flex flex-column justify-content-center align-items-center min-height-0

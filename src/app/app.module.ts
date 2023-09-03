@@ -11,6 +11,7 @@ import { RouterOutlet } from "@angular/router";
 import { AppRoutingModule } from "./app-routing.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { AppAuthModule } from "./app-auth/app-auth.module";
 
 @NgModule({
     declarations: [
@@ -20,6 +21,7 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
         BrowserModule,
         BrowserAnimationsModule,
         AppRoutingModule,
+        AppAuthModule,
         NutCommonModule,
     ],
     providers: [

@@ -1,8 +1,10 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Engine } from "tsparticles-engine";
 import { loadSlim } from "tsparticles-slim";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SECTIONS_METADATA } from "../../../seo/models/sections.metadata";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
+
 
 
 @Component({
@@ -10,78 +12,111 @@ import { SECTIONS_METADATA } from "../../../seo/models/sections.metadata";
     templateUrl: "./dashboard.page.html",
     styleUrls: ["./dashboard.page.scss"]
 })
-export class DashboardPage implements OnInit, OnDestroy {
+export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     particleConfigPath: string = "./assets/config/particle-nodes.conf.json";
 
     @ViewChild("welcome") dashboardIntro: ElementRef;
     @ViewChild("modelUpload") modelUpload: ElementRef;
     @ViewChild("shop") shop: ElementRef;
 
+    private observer: IntersectionObserver;
+    private initialScrollFinished: boolean = false;
+
+    private isScrolling: boolean = false;
+
+    private currentFragment: string;
+
     constructor(private route: ActivatedRoute,
                 private router: Router) {
     }
 
     ngOnInit(): void {
+
+    }
+
+    ngAfterViewInit(): void {
+        this.initIntersectionObserver();
+
         this.route.fragment.subscribe(fragment => {
             if (fragment) {
-                this.scrollToElement(fragment);
+                if (this.initialScrollFinished) {
+                    this.scrollToElement(fragment, "smooth");
+                } else {
+                    this.scrollToElement(fragment, "instant");
+                }
             }
         });
 
-        window.addEventListener("scroll", this.onScroll.bind(this), true);
+        console.log(this.dashboardIntro.nativeElement)
     }
 
     ngOnDestroy(): void {
-        window.removeEventListener("scroll", this.onScroll.bind(this), true);
+        if (this.observer) {
+            this.observer.disconnect();
+        }
     }
 
-    onScroll(): void {
-        let currentFragment: string | undefined;
+    private initIntersectionObserver(): void {
+        this.observer = new IntersectionObserver((entries: any) => {
+            entries.forEach((entry: any) => {
+                if (entry.isIntersecting) {
+                    const currentFragment = entry.target.id;
+                    this.currentFragment = currentFragment;
 
-        if (this.isElementInViewport(this.dashboardIntro)) {
-            currentFragment = SECTIONS_METADATA.dashboard.fragment;
-        } else if (this.isElementInViewport(this.modelUpload)) {
-            currentFragment = SECTIONS_METADATA.modelUpload.fragment;
-        } else if (this.isElementInViewport(this.shop)) {
-            currentFragment = SECTIONS_METADATA.shop.fragment;
-        }
+                    if (currentFragment && !this.isScrolling) {
 
-        if (currentFragment) {
-            this.router.navigate([], {
-                fragment: currentFragment,
-                replaceUrl: true
+                        this.router.navigate([], {
+                            fragment: currentFragment,
+                            replaceUrl: true
+                        });
+                    }
+                }
             });
+        }, { threshold: 0.5 });
+
+        this.observer.observe(this.dashboardIntro.nativeElement);
+        this.observer.observe(this.modelUpload.nativeElement);
+        this.observer.observe(this.shop.nativeElement);
+    }
+
+    private scrollToElement(elementId: string, behaviour: "smooth" | "instant" = "smooth"): void {
+        if (elementId === this.currentFragment) {
+            return;
         }
-    }
 
-    isElementInViewport(el: ElementRef): boolean {
-        const rect = el.nativeElement.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-    }
+        this.isScrolling = true;
+        let target: ElementRef;
 
-    private scrollToElement(elementId: string) {
         switch (elementId) {
             case SECTIONS_METADATA.dashboard.fragment:
-                this.dashboardIntro.nativeElement.scrollIntoView({ behavior: "smooth" });
+                target = this.dashboardIntro;
+                this.dashboardIntro.nativeElement.scrollIntoView({ behavior: behaviour });
                 break;
             case SECTIONS_METADATA.modelUpload.fragment:
-                this.modelUpload.nativeElement.scrollIntoView({ behavior: "smooth" });
+                target = this.modelUpload;
+                this.modelUpload.nativeElement.scrollIntoView({ behavior: behaviour });
                 break;
             case SECTIONS_METADATA.shop.fragment:
-                this.shop.nativeElement.scrollIntoView({ behavior: "smooth" });
+                target = this.shop;
+                this.shop.nativeElement.scrollIntoView({ behavior: behaviour });
                 break;
         }
+
+        const checkScroll = setInterval(() => {
+            if (target) {
+                const rect = target.nativeElement.getBoundingClientRect();
+                if (rect.top <= 0 && rect.bottom >= (window.innerHeight || document.documentElement.clientHeight)) {
+                    clearInterval(checkScroll);
+                    this.isScrolling = false;
+                    this.initialScrollFinished = true;
+                }
+            }
+        }, 100);
+
+        this.initialScrollFinished = true;
     }
 
     async particlesInit(engine: Engine): Promise<void> {
-        // Starting from 1.19.0 you can add custom presets or shape here, using the current tsParticles instance (main)
-        // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-        // starting from v2 you can add only the features you need reducing the bundle size
         await loadSlim(engine);
     }
 }

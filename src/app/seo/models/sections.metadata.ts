@@ -10,7 +10,7 @@ export const SECTIONS_METADATA = {
     },
     modelUpload: {
         path: "",
-        fragment: "model-upload",
+        fragment: "modelUpload",
         meta: {
             title: "Model Upload",
             description: "Model Upload description",
