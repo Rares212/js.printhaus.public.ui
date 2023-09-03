@@ -68,14 +68,6 @@ export class BuyButtonComponent implements OnInit, OnDestroy {
         this.subs.sink = combineLatest([this.quantityControl.valueChanges, this.unitCost$]).pipe(
             map(([quantity, unitCost]) => (quantity || 0) * unitCost)
         ).subscribe(totalCost => this.totalCostControl.setValue(totalCost));
-
-        this.quantityControl.valueChanges.subscribe(
-            value => console.log(value)
-        )
-
-        // this.subs.sink = this.quantityControl.valueChanges.pipe(
-        //     filter(value => !isNonNull(value)),
-        // ).subscribe(() => this.quantityControl.setValue(0));
     }
 
     ngOnInit(): void {

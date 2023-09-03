@@ -1,5 +1,6 @@
 <div class="d-flex flex-row justify-content-between nut-toolbar shadow">
-    <div #leftToolbar class="p-3 d-flex justify-content-start align-items-center flex-grow-0">
+    <div #leftToolbar class="d-none d-sm-flex p-3
+                             justify-content-start align-items-center flex-grow-0">
         <h3 class="d-flex flex-row align-items-center m-0">
             <div class="nut-rotate mx-1">
                 <i class="bi bi-nut nut-rotate"></i>
@@ -8,7 +9,7 @@
         </h3>
     </div>
 
-    <div #rightToolbar class="d-flex justify-content-end align-items-center p-3 w-100">
+    <div #middleToolbar class="flex-grow-1 toolbar-tabs d-flex justify-content-end align-items-center p-3">
         <tui-tabs-with-more class="w-100 justify-content-end shadow-none min-width-zero"
                             [itemsLimit]="10"
                             [moreContent]="dropdownIcon">
@@ -49,7 +50,11 @@
             </button>
 
         </tui-tabs-with-more>
-        <haus-user-badge *tuiItem class="mx-3">
+
+    </div>
+
+    <div #rightToolbar class="flex-grow-0 d-flex justify-content-center">
+        <haus-user-badge class="mx-3">
 
         </haus-user-badge>
     </div>
