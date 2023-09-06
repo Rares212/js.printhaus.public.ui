@@ -1,0 +1,16 @@
+<div *ngIf="reducedPrice; else singlePriceTemplate">
+    <div class="d-flex flex-row justify-content-center">
+        <tui-money [value]="price" [currency]="currency" class="original-price me-1">
+        </tui-money>
+        <tui-money [value]="reducedPrice" [currency]="currency" class="reduced-price">
+        </tui-money>
+    </div>
+
+</div>
+
+<ng-template #singlePriceTemplate>
+    <div class="d-flex flex-row justify-content-center">
+        <tui-money [value]="price" [currency]="currency" class="single-price">
+        </tui-money>
+    </div>
+</ng-template>

@@ -2,7 +2,7 @@
     {
         "id": "1",
         "name": "Rocktopus",
-        "description": null,
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris fringilla est ut nunc venenatis, laoreet faucibus nisl egestas. Nunc et iaculis mi, ac luctus mauris. Morbi ut lorem lectus. Nunc fermentum at metus eget dignissim. Aliquam aliquet lorem nec nisi feugiat ultrices. Cras nec elit sollicitudin, facilisis est non, bibendum ligula. Morbi in facilisis libero. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras elementum faucibus mollis. Aenean ultricies ut ex a fermentum. Aliquam sed felis magna. Etiam volutpat volutpat mi. Praesent et pulvinar nisi. Cras fermentum, orci nec aliquet lacinia, magna tellus ultrices odio, et placerat nulla magna ac enim. Nam vehicula ligula elit.",
         "img": "assets/img/gallery-mock-1.jpg",
         "materialName": "Pastel Green",
         "materialType": "PLA",
@@ -12,8 +12,13 @@
             "height": "20",
             "depth": "30"
         },
-        "costAmount": "1250",
-        "costCurrency": "RON"
+        "costAmount": "2000",
+        "reducedCostAmount": "1250",
+        "costCurrency": "RON",
+        "reviewCount": 121,
+        "reviewValue": 4.92,
+        "creator": "Printhaus",
+        "isFeatured": true
     },
     {
         "id": "2",
@@ -29,7 +34,10 @@
             "depth": "120"
         },
         "costAmount": "2000",
-        "costCurrency": "RON"
+        "costCurrency": "RON",
+        "reviewCount": 3,
+        "reviewValue": 4.0,
+        "creator": "Printhaus"
     },
     {
         "id": "3",
@@ -45,7 +53,10 @@
             "depth": "127"
         },
         "costAmount": "2500",
-        "costCurrency": "RON"
+        "costCurrency": "RON",
+        "reviewCount": 9,
+        "reviewValue": 2.7,
+        "creator": "Printhaus"
     },
     {
         "id": "4",
@@ -61,12 +72,15 @@
             "depth": "46"
         },
         "costAmount": "1250",
-        "costCurrency": "RON"
+        "costCurrency": "RON",
+        "reviewCount": 7,
+        "reviewValue": 3.7,
+        "creator": "Printhaus"
     },
     {
         "id": "5",
         "name": "Groot",
-        "description": null,
+        "description": "Lorem ipsum consectetur adipiscing elit. Mauris fringilla est ut nunc venenatis, laoreet faucibus nisl egestas.",
         "img": "assets/img/gallery-mock-5.jpg",
         "materialName": "Wood",
         "materialType": "PLA",
@@ -77,7 +91,11 @@
             "depth": "65"
         },
         "costAmount": "3500",
-        "costCurrency": "RON"
+        "reducedCostAmount": "2999",
+        "costCurrency": "RON",
+        "reviewCount": 21,
+        "reviewValue": 4.8,
+        "creator": "Printhaus"
     },
     {
         "id": "6",
@@ -93,6 +111,9 @@
             "depth": "83"
         },
         "costAmount": "2500",
-        "costCurrency": "RON"
+        "costCurrency": "RON",
+        "reviewCount": 18,
+        "reviewValue": 4.4,
+        "creator": "Printhaus"
     }
 ]

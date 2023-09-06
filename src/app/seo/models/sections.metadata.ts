@@ -51,6 +51,17 @@ export const SECTIONS_METADATA = {
             description: "Cart description",
             keywords: ["cart", "main"]
         }
+    },
+    checkout: {
+        path: "checkout",
+        meta: {
+            title: "Checkout",
+            description: "Checkout description",
+            keywords: ["checkout", "main"]
+        }
+    },
+    signup: {
+
     }
 }
 

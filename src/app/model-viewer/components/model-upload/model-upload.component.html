@@ -1,4 +1,5 @@
-<div [class]="styleClass + ' h-100 w-100 haus-card subtle-shadow'">
+<div [class]="styleClass + ' w-100 haus-card subtle-shadow'"
+     [@expandCollapse]="(loadedFile$ | async) ? 'expanded' : 'collapsed'">
         <tui-loader class="h-100 w-100"
                     [overlay]="true"
                     [inheritColor]="true"
@@ -39,6 +40,7 @@
                     </haus-print-details>
 
                     <haus-model-viewer class="flex-fill min-height-0"
+                                       [@expandCollapse]="(loadedFile$ | async) ? 'expanded' : 'collapsed'"
                                        [mesh]="loadedMesh$ | async"
                                        [materialColor]="printForm.get(FIELDS.MATERIAL)?.value.color"
                                        [normalScale]="(normalMapScale$ | async) || PRINT_QUALITY_NORMAL_MAP_SCALE[DEFAULT_PRINT_QUALITY]">

@@ -17,11 +17,6 @@
     width: 90%;
 }
 
-.small-font {
-    font: var(--tui-font-text-s);
-    vertical-align: middle;
-}
-
 .top-header {
     max-width: 100%;
     min-width: max-content;
@@ -29,4 +24,9 @@
 
 .limited-width {
     max-width: 2000px;
+}
+
+.featuredItem {
+    color: var(--tui-positive);
+    font-weight: bold;
 }

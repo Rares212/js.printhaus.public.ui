@@ -3,6 +3,7 @@ import { AuthService, User } from "@auth0/auth0-angular";
 import { DOCUMENT } from "@angular/common";
 import { arrow } from "@popperjs/core";
 import { TUI_ARROW } from "@taiga-ui/kit";
+import { map, tap } from "rxjs";
 
 @Component({
     selector: "haus-user-badge",
@@ -14,6 +15,9 @@ export class UserBadgeComponent implements OnInit {
 
     user$ = this.authService.user$;
     isAuthenticated$ = this.authService.isAuthenticated$;
+    isLoading$ = this.authService.isLoading$.pipe(
+        tap(value => console.log(`loading: ${value}`))
+    );
 
     dropdownOpen: boolean = false;
 

@@ -19,11 +19,33 @@ import { isDark, isNonNull } from "../../../common/util/common.util";
 import { DEFAULT_PRINT_QUALITY, DEFAULT_PRINT_STRENGTH } from "../../util/model-viewer.constants";
 import { tuiIsMobile } from "@taiga-ui/core";
 import { TUI_IS_MOBILE } from "@taiga-ui/cdk";
+import { animate, state, style, transition, trigger } from "@angular/animations";
 
 @Component({
     selector: "haus-model-upload",
     templateUrl: "./model-upload.component.html",
-    styleUrls: ["./model-upload.component.scss"]
+    styleUrls: ["./model-upload.component.scss"],
+    animations: [
+        trigger('expandCollapse', [
+            state(
+                'collapsed',
+                style({
+                    height: '50%',
+                    overflow: 'hidden',
+                    opacity: '1',
+                })
+            ),
+            state(
+                'expanded',
+                style({
+                    height: '100%',
+                    overflow: 'auto',
+                    opacity: '1',
+                })
+            ),
+            transition('collapsed <=> expanded', [animate('500ms ease-in-out')]),
+        ]),
+    ],
 })
 export class ModelUploadComponent implements OnInit {
     protected readonly ACCEPTS_HEADER: string = this.meshProcessingService.ACCEPTS_HEADER;

@@ -1,1 +1,56 @@
-<p>detailed-item-view works!</p>
+<div class="limited-width">
+    <div #header class="d-flex flex-row justify-content-between mb-3 flex-wrap">
+        <h2 class="item-heading mx-2">{{product.name}}</h2>
+        <haus-material-tag size="l" class="d-flex align-items-center tui-space_bottom-2 mx-2"
+                           [name]="product.materialName + ' ' + product.materialType"
+                           [color]="product.color">
+        </haus-material-tag>
+    </div>
+    <div class="container-fluid my-3">
+        <div class="row my-2">
+            <div class="col-sm position-relative
+                        d-flex justify-content-center justify-content-sm-start">
+                <img [ngSrc]="product.img"
+                     class="island-rounding object-fit-cover subtle-shadow-static m-2"
+                     width="220" height="220">
+            </div>
+            <div class="col-sm d-flex
+                        flex-column justify-content-center justify-content-sm-center m-2">
+                <haus-rating-indicator [rating]="product.reviewValue" [numberOfRatings]="product.reviewCount"
+                                       class="my-1">
+                </haus-rating-indicator>
+                <haus-price-indicator [price]="product.costAmount / 100"
+                                      [reducedPrice]="product.reducedCostAmount / 100"
+                                      [currency]="product.costCurrency"
+                                      class="my-1">
+                </haus-price-indicator>
+                <haus-buy-button [unitCost]="product.costAmount / 100"
+                                 [costCurrency]="product.costCurrency"
+                                 (click)="$event.stopPropagation();"
+                                 class="my-1"
+                                 label="Buy"
+                                 size="m">
+                </haus-buy-button>
+            </div>
+        </div>
+        <div class="row my-2">
+            <div class="col d-flex justify-content-start align-items-center">
+                <p class="small-font m-2 text-nowrap">
+                    {{(product.dimensions.width / 10 | number:'1.0-0') + ' x ' +
+                (product.dimensions.depth / 10 | number:'1.0-0') + ' x ' +
+                (product.dimensions.height / 10 | number:'1.0-0') + ' cm '}}
+                </p>
+            </div>
+            <div class="col text-nowrap d-flex justify-content-center align-items-center">
+                <p class="text-nowrap m-2 fw-bold">Created by: {{product.creator}}</p>
+            </div>
+
+        </div>
+        <div class="row my-2">
+            <div class="col-sm">{{product.description}}</div>
+        </div>
+        <div></div>
+    </div>
+</div>
+
+

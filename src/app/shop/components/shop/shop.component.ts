@@ -2,9 +2,9 @@ import {
     AfterViewInit,
     Component,
     ElementRef,
-    HostListener, Inject,
+    HostListener, Inject, Injector,
     Input,
-    OnChanges,
+    OnChanges, OnDestroy,
     OnInit,
     SimpleChanges,
     ViewChild
@@ -14,13 +14,16 @@ import { finalize, map, Observable, shareReplay, tap } from "rxjs";
 import { PaginatedRequestDto, ShopItemDto } from "@printnuts/common";
 import { isNonNull } from "../../../common/util/common.util";
 import { TUI_IS_MOBILE } from "@taiga-ui/cdk";
+import { TuiDialogService } from "@taiga-ui/core";
+import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
+import { DetailedItemViewComponent } from "../detailed-item-view/detailed-item-view.component";
 
 @Component({
   selector: 'haus-shop',
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.scss']
 })
-export class ShopComponent implements OnInit, AfterViewInit {
+export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('carouselParent', { static: true }) carouselParent: ElementRef;
 
     @Input() parentWidth: number = 0;
@@ -44,7 +47,7 @@ export class ShopComponent implements OnInit, AfterViewInit {
     }
 
     set activeIndex(value: number) {
-        if (isNonNull(value)) {
+        if (value || value === 0) {
             if (value < 0) {
                 this._activeIndex = this.itemCount - this.visibleItemCount;
             } else if (value > this.itemCount - this.visibleItemCount) {
@@ -63,12 +66,14 @@ export class ShopComponent implements OnInit, AfterViewInit {
 
     protected autoScroll: boolean = true;
 
-    constructor(private galleryService: ShopService,
-                @Inject(TUI_IS_MOBILE) readonly isMobile: boolean) {}
+    constructor(private shopService: ShopService,
+                @Inject(TUI_IS_MOBILE) readonly isMobile: boolean,
+                @Inject(TuiDialogService) private readonly dialogs: TuiDialogService,
+                @Inject(Injector) private readonly injector: Injector) {}
 
     ngOnInit(): void {
         this.loadingItems = true;
-        this.galleryItems$ = this.galleryService.getGalleryItems().pipe(
+        this.galleryItems$ = this.shopService.getGalleryItems().pipe(
             tap(items => this.itemCount = items.length),
             finalize(() => this.loadingItems = false)
         );
@@ -88,10 +93,25 @@ export class ShopComponent implements OnInit, AfterViewInit {
         this.resizeObserver.observe(this.carouselParent.nativeElement);
     }
 
+    ngOnDestroy(): void {
+        this.resizeObserver.unobserve(this.carouselParent.nativeElement);
+    }
+
     private calculateDimensions(): void {
         this.parentWidth = this.carouselParent.nativeElement.offsetWidth;
         this.visibleItemCount = Math.floor((this.parentWidth + this.padding) / (this.cardWidth + this.padding));
         // Force recalculation of activeIndex
         this.activeIndex = this.activeIndex;
+    }
+
+    openDetailedView(item: ShopItemDto): void {
+        this.dialogs.open(
+            new PolymorpheusComponent(DetailedItemViewComponent, this.injector), {
+                dismissible: true,
+                closeable: true,
+                size: 'auto',
+                data: item,
+            }
+        ).subscribe();
     }
 }

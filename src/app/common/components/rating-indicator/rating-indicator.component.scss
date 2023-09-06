@@ -1,0 +1,17 @@
+.userRated {
+    color: var(--tui-accent-active); // Color for user-rated items
+}
+
+.predefinedRated {
+    color: var(--tui-accent); // Default Taiga-UI color for predefined ratings
+}
+
+.rating-number {
+    font-size: larger;
+    font-weight: bold;
+}
+
+.total-ratings {
+    font-size: smaller;
+
+}

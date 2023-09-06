@@ -1,3 +1,10 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
 .details-fixed-height {
   height: 100px;
 }

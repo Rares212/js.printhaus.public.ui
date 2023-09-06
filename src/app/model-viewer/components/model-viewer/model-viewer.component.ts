@@ -68,6 +68,8 @@ export class ModelViewerComponent implements OnInit, AfterViewInit, OnDestroy, O
 
     private gridHelper: GridHelper;
 
+    private resizeObserver: ResizeObserver;
+
     constructor() {
 
     }
@@ -93,6 +95,14 @@ export class ModelViewerComponent implements OnInit, AfterViewInit, OnDestroy, O
         this.gridHelper = new GridHelper(this.gridSize, this.gridDivisions);
         this.gridHelper.geometry.rotateX( Math.PI / 2 );
 
+        this.resizeObserver = new ResizeObserver(entries => {
+            entries.forEach(entry => {
+                this.updateRendererSize();
+            });
+        });
+
+        this.resizeObserver.observe(this.rendererContainer.nativeElement);
+
         this.animate();
     }
 
@@ -101,6 +111,9 @@ export class ModelViewerComponent implements OnInit, AfterViewInit, OnDestroy, O
         this.renderer.forceContextLoss();
         if (this.mesh) {
             this.scene.remove(this.mesh);
+        }
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
         }
     }
 
@@ -196,11 +209,6 @@ export class ModelViewerComponent implements OnInit, AfterViewInit, OnDestroy, O
         });
 
         pmremGenerator.compileEquirectangularShader();
-    }
-
-    @HostListener("window:resize", ["$event"])
-    onWindowResize(event: any): void {
-        this.updateRendererSize();
     }
 
     private updateUVArray(geometry: BufferGeometry) {

@@ -2,39 +2,50 @@
                      tuiDropdownHover
                      [content]="dropdownContent"
                      [(open)]="dropdownOpen">
-    <div class="d-flex justify-content-center align-items-center">
-        <tui-avatar [rounded]="false"
-                    class="rounded-end-0"
-                    [autoColor]="true"
-                    [size]="size"
-                    [avatarUrl]="(user$ | async) ? null : 'tuiIconUser'"
-                    [text]="(user$ | async) ? (user$ | async)?.family_name + ' ' + (user$ | async)?.given_name : ''">
-        </tui-avatar>
-        <button tuiButton
-                class="rounded-start-0"
-                appearance="outline"
-                [iconRight]="arrow"
-                [pseudoActive]="dropdownOpen || null"
-                [size]="size">
-            My account
-        </button>
-    </div>
+    <tui-loader [overlay]="true"
+                [showLoader]="(isLoading$ | async) ?? false">
+        <div class="d-flex justify-content-center align-items-center">
+            <tui-avatar [rounded]="false"
+                        class="rounded-end-0"
+                        [autoColor]="true"
+                        [size]="size"
+                        [avatarUrl]="(user$ | async) ? null : 'tuiIconUser'"
+                        [text]="(user$ | async) ? (user$ | async)?.family_name + ' ' + (user$ | async)?.given_name : ''">
+            </tui-avatar>
+            <button tuiButton
+                    class="rounded-start-0"
+                    appearance="outline"
+                    [iconRight]="arrow"
+                    [pseudoActive]="dropdownOpen || null"
+                    [size]="size">
+                My account
+            </button>
+        </div>
+    </tui-loader>
+
 
 </tui-hosted-dropdown>
 
 <ng-template #dropdownContent>
     <tui-data-list>
-        <button *ngIf="!(isAuthenticated$ | async)" tuiOption
+        <button *ngIf="isAuthenticated$ | async" tuiOption type="button">
+            Your profile
+            <i class="bi bi-person-circle mx-2"></i>
+        </button>
+        <button *ngIf="!(isAuthenticated$ | async)" tuiOption type="button"
                 (click)="login()">
             Sign In
+            <i class="bi bi-box-arrow-in-right mx-2"></i>
         </button>
-        <button *ngIf="!(isAuthenticated$ | async)" tuiOption
+        <button *ngIf="!(isAuthenticated$ | async)" tuiOption type="button"
                 (click)="signup()">
             Register
+            <i class="bi bi-person-add mx-2"></i>
         </button>
-        <button *ngIf="isAuthenticated$ | async" tuiOption
+        <button *ngIf="isAuthenticated$ | async" tuiOption type="button"
                 (click)="logout()">
             Logout
+            <i class="bi bi-box-arrow-in-left mx-2"></i>
         </button>
     </tui-data-list>
 </ng-template>

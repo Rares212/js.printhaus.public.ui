@@ -26,16 +26,16 @@
                                   (click)="autoScroll=false">
                         <ng-container *ngFor="let item of (galleryItems$ | async); let i = index">
                             <tui-island *tuiItem
+                                        (click)="openDetailedView(item); autoScroll = false;"
                                         size="m"
                                         class="d-flex flex-column justify-content-center align-items-center
-                                                   very-subtle-shadow m-4
-                                                   
+                                                   very-subtle-shadow m-4 touchable
                                                    align-self-center gallery-item"
-                                        [class.item_active]="i === activeIndex + 1"
                                         [ngStyle]="{'width': cardWidth + 'px'}">
-                                <h2 class="tui-island__title text-center">{{item.name}}</h2>
+                                <h2 class="tui-island__title text-center"
+                                    [ngClass]="{featuredItem: item.isFeatured}">{{item.name}}</h2>
                                 <img [ngSrc]="item.img"
-                                     class="island-rounding object-fit-cover"
+                                     class="island-rounding object-fit-cover subtle-shadow-static"
                                      [width]="imageWidth" [height]="imageHeight"
                                      [draggable]="false">
                                 <div
@@ -44,25 +44,21 @@
                                                        [name]="item.materialName + ' ' + item.materialType"
                                                        [color]="item.color">
                                     </haus-material-tag>
-                                    <div class="d-flex row justify-content-center align-items-center">
-                                        <p class="small-font m-0">
-                                            {{(item.dimensions.width / 10 | number:'1.0-0') + 'x' +
-                                        (item.dimensions.depth / 10 | number:'1.0-0') + 'x' +
-                                        (item.dimensions.height / 10 | number:'1.0-0') + 'cm'}}
-                                        </p>
-                                    </div>
                                 </div>
 
-                                <tui-money [value]="item.costAmount / 100"
-                                           [currency]="item.costCurrency">
-                                </tui-money>
-                                <div class="tui-space_top-2">
-                                    <haus-buy-button [unitCost]="item.costAmount / 100"
-                                                     [costCurrency]="item.costCurrency"
-                                                     label="Buy"
-                                                     size="m">
-                                    </haus-buy-button>
-                                </div>
+                                <haus-rating-indicator [rating]="item.reviewValue" [numberOfRatings]="item.reviewCount">
+                                </haus-rating-indicator>
+                                <haus-price-indicator [price]="item.costAmount / 100"
+                                                      [reducedPrice]="item.reducedCostAmount / 100"
+                                                      [currency]="item.costCurrency">
+                                </haus-price-indicator>
+                                <haus-buy-button [unitCost]="item.costAmount / 100"
+                                                 [costCurrency]="item.costCurrency"
+                                                 (click)="$event.stopPropagation();"
+                                                 class="tui-space_top-2"
+                                                 label="Buy"
+                                                 size="m">
+                                </haus-buy-button>
                             </tui-island>
                         </ng-container>
                     </tui-carousel>

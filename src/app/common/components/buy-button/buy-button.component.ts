@@ -13,12 +13,14 @@ import { animate, group, query, state, style, transition, trigger } from "@angul
             state('void', style({
                 opacity: 0,
                 width: '0px',
-                display: 'hidden'
+                display: 'hidden',
+                'pointer-events': 'none'
             })),
             state('*', style({
                 opacity: 1,
                 width: '*',
-                display: '*'
+                display: '*',
+                'pointer-events': 'auto'
             })),
             transition('void <=> *', [
                 animate(200)

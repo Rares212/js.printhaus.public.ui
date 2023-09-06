@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import {
     TuiAlertModule,
     TuiButtonModule,
+    TuiDialogModule,
     TuiErrorModule,
     TuiGroupModule,
     TuiHintModule,
@@ -26,7 +27,7 @@ import {
     TuiInputSliderModule,
     TuiIslandModule,
     TuiLineClampModule,
-    TuiMarkerIconModule,
+    TuiMarkerIconModule, TuiRatingModule,
     TuiSelectModule,
     TuiTabsModule,
     TuiTagModule,
@@ -47,6 +48,8 @@ import { CommonModule } from "@angular/common";
 import { RouterLink, RouterModule } from "@angular/router";
 import { AppAuthModule } from "../app-auth/app-auth.module";
 import { TuiMobileTabsModule } from "@taiga-ui/addon-mobile";
+import { PriceIndicatorComponent } from './components/price-indicator/price-indicator.component';
+import { RatingIndicatorComponent } from './components/rating-indicator/rating-indicator.component';
 
 @NgModule({
     declarations: [
@@ -54,7 +57,9 @@ import { TuiMobileTabsModule } from "@taiga-ui/addon-mobile";
         ReplaceUnderscorePipe,
         HourToTimePipe,
         BuyButtonComponent,
-        MaterialTagComponent
+        MaterialTagComponent,
+        PriceIndicatorComponent,
+        RatingIndicatorComponent
     ],
     exports: [
         CommonModule,
@@ -114,8 +119,11 @@ import { TuiMobileTabsModule } from "@taiga-ui/addon-mobile";
         TuiTabsModule,
         TuiInputNumberModule,
         TuiCurrencyPipeModule,
+        TuiDialogModule,
         TuiAvatarModule,
-        MaterialTagComponent
+        MaterialTagComponent,
+        PriceIndicatorComponent,
+        RatingIndicatorComponent
     ],
     imports: [
         CommonModule,
@@ -136,7 +144,8 @@ import { TuiMobileTabsModule } from "@taiga-ui/addon-mobile";
         TuiTagModule,
         TuiSvgModule,
         AppAuthModule,
-        TuiMobileTabsModule
+        TuiMobileTabsModule,
+        TuiRatingModule
     ]
 })
 export class NutCommonModule {

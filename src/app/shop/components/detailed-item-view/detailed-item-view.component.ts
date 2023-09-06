@@ -1,16 +1,23 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Component, Inject, OnInit } from "@angular/core";
+import { ShopItemDto } from "@printnuts/common";
+import {POLYMORPHEUS_CONTEXT} from '@tinkoff/ng-polymorpheus';
+import { TuiDialogContext } from "@taiga-ui/core";
 
 @Component({
-  selector: 'haus-detailed-item-view',
-  templateUrl: './detailed-item-view.component.html',
-  styleUrls: ['./detailed-item-view.component.scss']
+    selector: "haus-detailed-item-view",
+    templateUrl: "./detailed-item-view.component.html",
+    styleUrls: ["./detailed-item-view.component.scss"]
 })
 export class DetailedItemViewComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute) { }
+    product: ShopItemDto;
 
-  ngOnInit(): void {
-  }
+    constructor(@Inject(POLYMORPHEUS_CONTEXT)
+                private readonly context: TuiDialogContext<any, any>,) {
+    }
+
+    ngOnInit(): void {
+        this.product = this.context.data;
+    }
 
 }

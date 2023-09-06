@@ -5,9 +5,15 @@ import { NutCommonModule } from "../common/nut-common.module";
 import { environment } from "../../environments/environment";
 import { AuthHttpInterceptor, AuthModule } from "@auth0/auth0-angular";
 import { TuiAvatarModule } from "@taiga-ui/kit";
-import { TuiButtonModule, TuiDataListModule, TuiDropdownModule, TuiHostedDropdownModule } from "@taiga-ui/core";
+import {
+    TuiButtonModule,
+    TuiDataListModule,
+    TuiDropdownModule,
+    TuiHostedDropdownModule,
+    TuiLoaderModule
+} from "@taiga-ui/core";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
-import { TuiItemModule } from "@taiga-ui/cdk";
+import { TuiIsPresentPipeModule, TuiItemModule } from "@taiga-ui/cdk";
 
 
 @NgModule({
@@ -36,7 +42,9 @@ import { TuiItemModule } from "@taiga-ui/cdk";
         TuiDataListModule,
         TuiButtonModule,
         TuiDropdownModule,
-        TuiItemModule
+        TuiItemModule,
+        TuiLoaderModule,
+        TuiIsPresentPipeModule
     ],
     providers: [
         {

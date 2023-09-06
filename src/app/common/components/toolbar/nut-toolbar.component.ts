@@ -14,5 +14,6 @@ export class NutToolbarComponent {
         queryParams: 'ignored',
         paths: 'subset'
     }
-        protected readonly SECTIONS_METADATA = SECTIONS_METADATA;
+
+    protected readonly SECTIONS_METADATA = SECTIONS_METADATA;
 }
