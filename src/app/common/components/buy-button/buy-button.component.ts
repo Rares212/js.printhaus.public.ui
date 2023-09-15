@@ -23,7 +23,7 @@ import { animate, group, query, state, style, transition, trigger } from "@angul
                 'pointer-events': 'auto'
             })),
             transition('void <=> *', [
-                animate(200)
+                animate("300ms ease")
             ]),
         ])
     ]

@@ -1,49 +1,48 @@
-<div [class]="'container justify-content-between tui-space_left-3 tui-space_right-3 ' + styleClass">
-    <div class="row">
-        <div #printDimension *ngIf="printDimensions" class="col-4 position-relative">
-            <p>{{(printDimensions.x | number:'1.0-0') + ' x ' + (printDimensions.y | number:'1.0-0') + ' x ' + (printDimensions.z | number:'1.0-0') + ' mm'}}</p>
-            <div *ngIf="printDetails" class="tui-space_top-3">
-                <label tuiLabel="Show cost info">
-                    <tui-toggle size="l" [formControl]="showCostInfoControl">
-                    </tui-toggle>
-                </label>
-            </div>
-
-            <tui-ring-chart *ngIf="printDetails && showCostInfoControl.value"
-                            [value]="costChartValues"
-                            [(activeItemIndex)]="activeCostChartIndex"
-                            size="m"
-                            class="cost-chart bg-white rounded-circle">
-                <tui-money [value]="sum / 100" [currency]="costChartCurrency" [precision]="2" decimal="always">
-                </tui-money>
-                <div>{{ label }}</div>
-            </tui-ring-chart>
-
+<div [class]="'tui-space_left-3 tui-space_right-3 d-flex justify-content-between ' + styleClass">
+    <div #leftDetails *ngIf="printDimensions" class="position-relative">
+        <p class="text-nowrap">
+            {{(printDimensions.x | number:'1.0-0') + ' x ' + (printDimensions.y | number:'1.0-0') + ' x ' + (printDimensions.z | number:'1.0-0') + ' mm'}}
+        </p>
+        <div *ngIf="printDetails" class="tui-space_top-3 ">
+            <label tuiLabel="Show cost info">
+                <tui-toggle size="l" [formControl]="showCostInfoControl">
+                </tui-toggle>
+            </label>
         </div>
 
-        <div *ngIf="printDetails" class="col-8 d-flex flex-column">
-            <div #printData class="d-flex flex-row justify-content-end flex-wrap">
-                <div class="tui-space_horizontal-2">
-                    <label tuiLabel="Cost">
-                        <tui-money [currency]="printDetails.cost.currency"
-                                   [value]="printDetails.cost.amount / 100"
-                                   [colored]="false">
-                        </tui-money>
-                    </label>
-                </div>
+        <tui-ring-chart *ngIf="printDetails && showCostInfoControl.value"
+                        [value]="costChartValues"
+                        [(activeItemIndex)]="activeCostChartIndex"
+                        size="m"
+                        class="cost-chart bg-white rounded-circle">
+            <tui-money [value]="sum / 100" [currency]="costChartCurrency" [precision]="2" decimal="always">
+            </tui-money>
+            <div>{{ label }}</div>
+        </tui-ring-chart>
 
-                <div class="tui-space_horizontal-2">
-                    <label tuiLabel="Weight">
-                        {{(printDetails.grams | number:'1.0-0') + 'g'}}
-                    </label>
-                </div>
+    </div>
 
-                <div class="tui-space_horizontal-2">
-                    <label tuiLabel="Print time" class="text-nowrap">
-                        {{(printDetails.estimatedPrintTimeHours | hourToTime) + 'h'}}
-                    </label>
-                </div>
-            </div>
+    <div *ngIf="printDetails" #printData class="d-flex flex-column flex-sm-row justify-content-end flex-wrap">
+        <div class="tui-space_horizontal-2">
+            <label tuiLabel="Cost">
+                <tui-money [currency]="printDetails.cost.currency"
+                           [value]="printDetails.cost.amount / 100"
+                           [colored]="false">
+                </tui-money>
+            </label>
+        </div>
+
+        <div class="tui-space_horizontal-2">
+            <label tuiLabel="Weight">
+                {{(printDetails.grams | number:'1.0-0') + 'g'}}
+            </label>
+        </div>
+
+        <div class="tui-space_horizontal-2">
+            <label tuiLabel="Print time" class="text-nowrap">
+                {{(printDetails.estimatedPrintTimeHours | hourToTime) + 'h'}}
+            </label>
         </div>
     </div>
+
 </div>

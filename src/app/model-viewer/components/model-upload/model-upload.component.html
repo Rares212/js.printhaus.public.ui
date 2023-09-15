@@ -1,5 +1,4 @@
-<div [class]="styleClass + ' w-100 haus-card subtle-shadow'"
-     [@expandCollapse]="(loadedFile$ | async) ? 'expanded' : 'collapsed'">
+<div [class]="styleClass + ' w-100 h-100 haus-card subtle-shadow'">
         <tui-loader class="h-100 w-100"
                     [overlay]="true"
                     [inheritColor]="true"
@@ -8,7 +7,8 @@
                 <div class="d-flex flex-column h-100">
                     <h4 class="text-center">Load your own model</h4>
 
-                    <tui-input-files class="p-2"
+                    <tui-input-files class="p-2 h-100"
+                                     size="l"
                                      *ngIf="!printForm.get(FIELDS.FILE)!.value"
                                      [formControlName]="FIELDS.FILE"
                                      [accept]="ACCEPTS_HEADER"
@@ -22,25 +22,26 @@
                             state="normal"
                             [file]="file"
                             [showDelete]="printForm.get(FIELDS.FILE)!.enabled"
-                            (removed)="removeFile()"
-                        ></tui-file>
+                            (removed)="removeFile()">
+                        </tui-file>
 
                         <tui-file
                             *ngIf="rejectedFile$ | async as file"
                             state="error"
                             [file]="file"
                             [showDelete]="printForm.get(FIELDS.FILE)!.enabled"
-                            (removed)="clearRejected()"
-                        ></tui-file>
+                            (removed)="clearRejected()">
+                        </tui-file>
                     </tui-files>
 
-                    <haus-print-details styleClass="tui-space_vertical-2" class="details-fixed-height"
+                    <haus-print-details styleClass="tui-space_vertical-2"
+                                        [@expandCollapse]="(loadedFile$ | async) ? 'expanded' : 'collapsedFully'"
                                         [printDimensions]="printDimensions"
                                         [printDetails]="printDetailsResponse$ | async">
                     </haus-print-details>
 
                     <haus-model-viewer class="flex-fill min-height-0"
-                                       [@expandCollapse]="(loadedFile$ | async) ? 'expanded' : 'collapsed'"
+                                       [@expandCollapse]="(loadedFile$ | async) ? 'expandedFully' : 'collapsedFully'"
                                        [mesh]="loadedMesh$ | async"
                                        [materialColor]="printForm.get(FIELDS.MATERIAL)?.value.color"
                                        [normalScale]="(normalMapScale$ | async) || PRINT_QUALITY_NORMAL_MAP_SCALE[DEFAULT_PRINT_QUALITY]">
@@ -61,7 +62,9 @@
                                     [valueContent]="qualityContent"
                                     [tuiTextfieldSize]="isMobile ? 'm' : 'l'">
                             Quality
-                            <tui-data-list-wrapper *tuiDataList [items]="qualityList" [itemContent]="qualityContent">
+                            <tui-data-list-wrapper *tuiDataList
+                                                   [items]="qualityList"
+                                                   [itemContent]="qualityContent">
                             </tui-data-list-wrapper>
                         </tui-select>
 
@@ -69,7 +72,9 @@
                                     [valueContent]="strengthContent"
                                     [tuiTextfieldSize]="isMobile ? 'm' : 'l'">
                             Strength
-                            <tui-data-list-wrapper *tuiDataList [items]="strengthList" [itemContent]="strengthContent">
+                            <tui-data-list-wrapper *tuiDataList
+                                                   [items]="strengthList"
+                                                   [itemContent]="strengthContent">
                             </tui-data-list-wrapper>
                         </tui-select>
                     </div>

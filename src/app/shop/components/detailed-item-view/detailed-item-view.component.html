@@ -11,7 +11,8 @@
             <div class="col-sm position-relative
                         d-flex justify-content-center justify-content-sm-start">
                 <img [ngSrc]="product.img"
-                     class="island-rounding object-fit-cover subtle-shadow-static m-2"
+                     class="island-rounding object-fit-cover subtle-shadow-static
+                            mx-2 mx-sm-0 my-2"
                      width="220" height="220">
             </div>
             <div class="col-sm d-flex
@@ -35,21 +36,36 @@
         </div>
         <div class="row my-2">
             <div class="col d-flex justify-content-start align-items-center">
-                <p class="small-font m-2 text-nowrap">
+                <p class="small-font my-2 text-nowrap">
                     {{(product.dimensions.width / 10 | number:'1.0-0') + ' x ' +
                 (product.dimensions.depth / 10 | number:'1.0-0') + ' x ' +
                 (product.dimensions.height / 10 | number:'1.0-0') + ' cm '}}
                 </p>
             </div>
-            <div class="col text-nowrap d-flex justify-content-center align-items-center">
-                <p class="text-nowrap m-2 fw-bold">Created by: {{product.creator}}</p>
+            <div class="col text-nowrap d-flex justify-content-end align-items-center">
+                <p class="text-nowrap my-2 fw-bold">Created by: {{product.creator}}</p>
             </div>
 
         </div>
         <div class="row my-2">
             <div class="col-sm">{{product.description}}</div>
         </div>
-        <div></div>
+        <div *ngIf="product.assemblyRequired" class="d-flex justify-content-between flex-wrap">
+            <div class="d-flex flex-wrap">
+                <div *ngFor="let tag of product.tags">
+                    <tui-tag [value]="tag" size="s" class="m-1">
+
+                    </tui-tag>
+                </div>
+            </div>
+            <tui-tag value="Assembly required"
+                     class="m-1"
+                     status="warning">
+            </tui-tag>
+        </div>
+        <div class="d-flex flex-row flex-wrap">
+
+        </div>
     </div>
 </div>
 

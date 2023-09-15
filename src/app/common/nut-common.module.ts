@@ -34,7 +34,6 @@ import {
     TuiToggleModule
 } from "@taiga-ui/kit";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { TuiHoveredModule, TuiIsPresentPipeModule } from "@taiga-ui/cdk";

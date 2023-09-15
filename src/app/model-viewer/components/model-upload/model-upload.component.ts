@@ -28,6 +28,14 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
     animations: [
         trigger('expandCollapse', [
             state(
+                'collapsedFully',
+                style({
+                    height: '0%',
+                    overflow: 'hidden',
+                    opacity: '1',
+                })
+            ),
+            state(
                 'collapsed',
                 style({
                     height: '50%',
@@ -38,12 +46,20 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
             state(
                 'expanded',
                 style({
+                    height: '*',
+                    overflow: '*',
+                    opacity: '1',
+                })
+            ),
+            state(
+                'expandedFully',
+                style({
                     height: '100%',
                     overflow: 'auto',
                     opacity: '1',
                 })
             ),
-            transition('collapsed <=> expanded', [animate('500ms ease-in-out')]),
+            transition('* <=> *', [animate('300ms ease-in-out')]),
         ]),
     ],
 })

@@ -18,7 +18,14 @@
         "reviewCount": 121,
         "reviewValue": 4.92,
         "creator": "Printhaus",
-        "isFeatured": true
+        "isFeatured": true,
+        "assemblyRequired": true,
+        "tags": [
+            "octopus",
+            "rock",
+            "music",
+            "rocktopus"
+        ]
     },
     {
         "id": "2",

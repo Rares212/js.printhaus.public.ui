@@ -1,7 +1,8 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { ShopItemDto } from "@printnuts/common";
 import {POLYMORPHEUS_CONTEXT} from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from "@taiga-ui/core";
+import { TuiPreviewDialogService } from "@taiga-ui/addon-preview";
 
 @Component({
     selector: "haus-detailed-item-view",
@@ -12,12 +13,11 @@ export class DetailedItemViewComponent implements OnInit {
 
     product: ShopItemDto;
 
-    constructor(@Inject(POLYMORPHEUS_CONTEXT)
-                private readonly context: TuiDialogContext<any, any>,) {
-    }
 
+    constructor(@Inject(POLYMORPHEUS_CONTEXT)
+                private readonly context: TuiDialogContext<any, any>) {
+    }
     ngOnInit(): void {
         this.product = this.context.data;
     }
-
 }
