@@ -1,3 +1,7 @@
+:root {
+    --tui-skeleton-radius: 5px;
+}
+
 .item-heading {
     font: var(--tui-font-heading-3);
 }
@@ -15,7 +19,7 @@
     cursor: pointer;
 }
 
-.mesh-viewer {
+.visual-content {
     width: 220px;
     height: 220px;
 }

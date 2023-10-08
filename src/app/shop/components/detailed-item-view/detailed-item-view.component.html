@@ -10,17 +10,40 @@
         <div class="row my-2">
             <div class="col-sm position-relative
                         d-flex justify-content-center justify-content-sm-start">
-                <haus-image [width]="220" [height]="220"
-                            [image]="product.galleryPhotos[0]">
-                </haus-image>
+                <div class="d-flex flex-column justify-content-center">
+                    <div [ngClass]="showModel ? 'd-none' : 'd-block'">
+                        <haus-image [width]="220" [height]="220"
+                                    [image]="product.galleryPhotos[0]">
+                        </haus-image>
+                    </div>
 
-                <haus-model-viewer *ngIf="modelMesh$ | async as mesh"
-                                   [mesh]="mesh"
-                                   [materialColor]="product.material.color"
-                                   [normalScale]="PRINT_QUALITY_NORMAL_MAP_SCALE[PrintQuality.DETAILED]"
-                                   [showGrid]="false"
-                                   class="mesh-viewer">
-                </haus-model-viewer>
+                    <div [ngClass]="showModel ? 'd-block' : 'd-none'" class="visual-content">
+                        <div *ngIf="loadingMesh$ | async"
+                             class="h-100 w-100"
+                             [class.tui-skeleton]="true"
+                             [class.tui-skeleton_rounded]="true">
+                        </div>
+                        <haus-model-viewer *ngIf="modelMesh$ | async as mesh"
+                                           [mesh]="mesh"
+                                           [materialColor]="product.material.color"
+                                           [normalScale]="PRINT_QUALITY_NORMAL_MAP_SCALE[PrintQuality.DETAILED]"
+                                           [showGrid]="false"
+                                           class="w-100 h-100">
+                        </haus-model-viewer>
+                    </div>
+
+                    <div class="d-flex justify-content-center my-3">
+                        <button tuiButton
+                                appearance="outline"
+                                size="s"
+                                class="smooth-resize"
+                                (click)="showModel = !showModel">
+                            {{showModel ? 'Show image gallery' : 'Show 3D model'}}
+                        </button>
+                    </div>
+
+
+                </div>
             </div>
             <div class="col-sm d-flex
                         flex-column justify-content-center justify-content-sm-center m-2">
@@ -75,5 +98,3 @@
         </div>
     </div>
 </div>
-
-

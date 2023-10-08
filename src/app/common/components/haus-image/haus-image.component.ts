@@ -10,7 +10,7 @@ import { TuiPreviewDialogService } from "@taiga-ui/addon-preview";
 })
 export class HausImageComponent {
     @ViewChild('preview')
-    readonly preview?: TemplateRef<TuiDialogContext>;
+    readonly preview: TemplateRef<TuiDialogContext>;
 
     @Input() image: ImageInfoRespDto;
     @Input() imageQuality: ImageQuality = 'low';
@@ -26,7 +26,7 @@ export class HausImageComponent {
     @Input() stopPropagation: boolean = false;
 
     constructor(@Inject(TuiPreviewDialogService)
-                private readonly previewDialogService: TuiPreviewDialogService,) {
+                private readonly previewDialogService: TuiPreviewDialogService) {
     }
 
     get imageSrc(): string {
