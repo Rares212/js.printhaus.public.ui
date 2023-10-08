@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
-import { PrintModelDetailsRespDto } from "@printnuts/common";
 import { Vector3 } from "three";
 import { FormControl } from "@angular/forms";
+import { PrintModelDetailsRespDto } from "@printhaus/common";
 
 @Component({
     selector: "haus-print-details",

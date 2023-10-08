@@ -14,6 +14,24 @@ export const environment = {
                     url: 'print/model-details',
                 }
             }
+        },
+
+        shop: {
+            items: {
+                get: {
+                    url: 'shop/items',
+                }
+            },
+            itemCount: {
+                get: {
+                    url: 'shop/item-count',
+                }
+            },
+            modelSignedUrl: {
+                get: {
+                    url: 'shop/item/model-signed-url',
+                }
+            }
         }
     },
     auth: {

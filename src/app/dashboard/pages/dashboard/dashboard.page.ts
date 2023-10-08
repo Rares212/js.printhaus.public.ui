@@ -46,8 +46,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
         });
-
-        console.log(this.dashboardIntro.nativeElement)
     }
 
     ngOnDestroy(): void {

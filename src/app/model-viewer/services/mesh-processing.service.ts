@@ -1,17 +1,17 @@
 import { Injectable } from "@angular/core";
 import { BufferGeometry, Group, Material, Matrix4, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
-import { from, map, Observable, switchMap } from "rxjs";
+import { from, map, Observable, of, switchMap } from "rxjs";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { TuiFileLike } from "@taiga-ui/kit";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { getFileType } from "../../common/util/common.util";
-import { PrintModelDetailsRespDto, PrintSettingsDto, SupportedMeshFileTypes } from "@printnuts/common";
 import { gzipSync } from "fflate";
 import { HttpClient } from "@angular/common/http";
 import { mergeBufferGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
 import { PrintModelDetailsReqDto } from "../models/print-model-details.req.dto";
 import { buildUrlPath } from "../../common/util/http.util";
 import { environment } from "../../../environments/environment";
+import { PrintModelDetailsRespDto, PrintSettingsDto, SupportedMeshFileTypes } from "@printhaus/common";
 
 @Injectable({
     providedIn: "root"
@@ -52,6 +52,30 @@ export class MeshProcessingService {
                 return from((file as File).arrayBuffer()).pipe(
                     map(buffer => this.parseObj(buffer)),
                     map(buffer => this.meshFromGeometry(buffer, material!, centered))
+                );
+            }
+            default: {
+                throw new Error("Error parsing mesh file");
+            }
+        }
+    }
+
+    public parseUrl(url: string,
+                    fileType: string,
+                    material: Material = this.defaultMaterial,
+                    centered: boolean = true): Observable<Mesh> {
+        switch (fileType.toLowerCase()) {
+            case SupportedMeshFileTypes.STL: {
+                return from(this.stlLoader.loadAsync(url)).pipe(
+                    map(buffer => this.meshFromGeometry(buffer, material, centered))
+                );
+            }
+            case SupportedMeshFileTypes.OBJ: {
+                return from(this.objLoader.loadAsync(url)).pipe(
+                    map(buffer => {
+                        const geometry = this.combineMeshes(buffer);
+                        return this.meshFromGeometry(geometry, material, centered);
+                    })
                 );
             }
             default: {
@@ -107,7 +131,6 @@ export class MeshProcessingService {
 
     private parseObj(buffer: ArrayBuffer): BufferGeometry {
         const group: Group = this.objLoader.parse(new Uint8Array(buffer).toString());
-        console.log(group);
         return this.combineMeshes(group);
     }
 

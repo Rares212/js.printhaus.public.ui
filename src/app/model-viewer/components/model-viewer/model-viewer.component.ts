@@ -30,9 +30,10 @@ import {
 } from "three";
 import { isNonNull, removeAllFromScene } from "../../../common/util/common.util";
 import { Geometry } from "three/examples/jsm/deprecated/Geometry";
-import { PRINT_QUALITY_NORMAL_MAP_SCALE } from "@printnuts/common";
 import { DEFAULT_PRINT_QUALITY } from "../../util/model-viewer.constants";
 import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader";
+import { PRINT_QUALITY_NORMAL_MAP_SCALE } from "@printhaus/common";
+import { STATIC_ASSET_PATHS } from "../../../../assets/static/static-asset.keys";
 
 @Component({
     selector: "haus-model-viewer",
@@ -60,23 +61,22 @@ export class ModelViewerComponent implements OnInit, AfterViewInit, OnDestroy, O
     camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight);
     controls = new OrbitControls(this.camera, this.renderer.domElement);
 
-    private readonly normalMapUrl: string = "assets/maps/3DPrint_NormalMap_2K.png";
-    private readonly envMapUrl: string = "assets/maps/studio_small_08_1k.exr";
+    private readonly normalMapUrl: string = STATIC_ASSET_PATHS.normalMap;
+    private readonly envMapUrl: string = STATIC_ASSET_PATHS.envMap;
     private normalMap: Texture;
     private envMapBackground: DataTexture;
     private exrCubeRenderTarget: any;
 
-    private gridHelper: GridHelper;
+    private gridHelper: GridHelper = new GridHelper(this.gridSize, this.gridDivisions);
 
     private resizeObserver: ResizeObserver;
 
     constructor() {
-
+        const textureLoader = new TextureLoader();
+        this.normalMap = textureLoader.load(this.normalMapUrl);
     }
 
     ngOnInit(): void {
-        const textureLoader = new TextureLoader();
-        this.normalMap = textureLoader.load(this.normalMapUrl);
         this.loadEnvMap();
 
         this.controls.enableZoom = true;
@@ -92,7 +92,6 @@ export class ModelViewerComponent implements OnInit, AfterViewInit, OnDestroy, O
         this.renderer.toneMappingExposure = 1;
         // this.scene.background = new Color(0xF0FFF0);
 
-        this.gridHelper = new GridHelper(this.gridSize, this.gridDivisions);
         this.gridHelper.geometry.rotateX( Math.PI / 2 );
 
         this.resizeObserver = new ResizeObserver(entries => {
@@ -250,7 +249,7 @@ export class ModelViewerComponent implements OnInit, AfterViewInit, OnDestroy, O
             envMapIntensity: 1.0,
             thickness: 3.0,
             attenuationDistance: 0.8,
-            attenuationColor: new Color("c0c0c0"),
+            attenuationColor: new Color("#C0C0C0"),
             normalMap: this.normalMap,
             normalScale: new Vector2(0.5, 0.5),
             roughness: 0.2,

@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { PrintMaterialDto } from "@printnuts/common";
 import { map, Observable } from "rxjs";
 import { environment } from "../../../environments/environment";
 import { buildUrlPath } from "../../common/util/http.util";
+import { PrintMaterialDto } from "@printhaus/common";
 
 @Injectable({
     providedIn: "root"

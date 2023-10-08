@@ -15,9 +15,7 @@ export class UserBadgeComponent implements OnInit {
 
     user$ = this.authService.user$;
     isAuthenticated$ = this.authService.isAuthenticated$;
-    isLoading$ = this.authService.isLoading$.pipe(
-        tap(value => console.log(`loading: ${value}`))
-    );
+    isLoading$ = this.authService.isLoading$;
 
     dropdownOpen: boolean = false;
 

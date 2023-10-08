@@ -82,10 +82,4 @@ export class BuyButtonComponent implements OnInit, OnDestroy {
     onBuyClick(): void {
         this.quantityControl.setValue(1);
     }
-
-    logTest(event: any) {
-        console.log(event);
-    }
-
-
 }

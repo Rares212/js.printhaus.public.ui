@@ -6,20 +6,18 @@ import { TuiFileLike } from "@taiga-ui/kit";
 import { MeshStore } from "../../stores/mesh.store";
 import { MeshProcessingService } from "../../services/mesh-processing.service";
 import { PrintUploadFormFields } from "./print-settings-options.enum";
-import {
-    PrintMaterialDto,
-    PrintModelDetailsRespDto,
-    PrintQuality,
-    PrintSettingsDto,
-    PrintStrength,
-    PRINT_QUALITY_NORMAL_MAP_SCALE
-} from "@printnuts/common";
 import { MaterialService } from "../../services/material.service";
 import { isDark, isNonNull } from "../../../common/util/common.util";
 import { DEFAULT_PRINT_QUALITY, DEFAULT_PRINT_STRENGTH } from "../../util/model-viewer.constants";
 import { tuiIsMobile } from "@taiga-ui/core";
 import { TUI_IS_MOBILE } from "@taiga-ui/cdk";
 import { animate, state, style, transition, trigger } from "@angular/animations";
+import {
+    PrintModelDetailsRespDto,
+    PRINT_QUALITY_NORMAL_MAP_SCALE,
+    PrintQuality,
+    PrintMaterialDto, PrintStrength, PrintSettingsDto
+} from "@printhaus/common";
 
 @Component({
     selector: "haus-model-upload",

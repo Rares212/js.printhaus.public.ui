@@ -43,12 +43,14 @@ import { TuiCurrencyPipeModule, TuiMoneyModule } from "@taiga-ui/addon-commerce"
 import { BuyButtonComponent } from './components/buy-button/buy-button.component';
 import { TuiLegendItemModule, TuiRingChartModule } from "@taiga-ui/addon-charts";
 import { MaterialTagComponent } from './components/material-tag/material-tag.component';
-import { CommonModule } from "@angular/common";
+import { CommonModule, NgOptimizedImage } from "@angular/common";
 import { RouterLink, RouterModule } from "@angular/router";
 import { AppAuthModule } from "../app-auth/app-auth.module";
 import { TuiMobileTabsModule } from "@taiga-ui/addon-mobile";
 import { PriceIndicatorComponent } from './components/price-indicator/price-indicator.component';
 import { RatingIndicatorComponent } from './components/rating-indicator/rating-indicator.component';
+import { HausImageComponent } from './components/haus-image/haus-image.component';
+import { TuiPreviewModule } from "@taiga-ui/addon-preview";
 
 @NgModule({
     declarations: [
@@ -58,7 +60,8 @@ import { RatingIndicatorComponent } from './components/rating-indicator/rating-i
         BuyButtonComponent,
         MaterialTagComponent,
         PriceIndicatorComponent,
-        RatingIndicatorComponent
+        RatingIndicatorComponent,
+        HausImageComponent
     ],
     exports: [
         CommonModule,
@@ -122,7 +125,8 @@ import { RatingIndicatorComponent } from './components/rating-indicator/rating-i
         TuiAvatarModule,
         MaterialTagComponent,
         PriceIndicatorComponent,
-        RatingIndicatorComponent
+        RatingIndicatorComponent,
+        HausImageComponent
     ],
     imports: [
         CommonModule,
@@ -144,7 +148,9 @@ import { RatingIndicatorComponent } from './components/rating-indicator/rating-i
         TuiSvgModule,
         AppAuthModule,
         TuiMobileTabsModule,
-        TuiRatingModule
+        TuiRatingModule,
+        NgOptimizedImage,
+        TuiPreviewModule
     ]
 })
 export class NutCommonModule {

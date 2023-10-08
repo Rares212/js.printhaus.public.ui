@@ -1,7 +1,7 @@
 export const environment = {
     printhausApi: {
-        rootUrl: 'http://localhost:3000/printnuts-api',
-        apiVersion: 'v1',
+        rootUrl: 'printhaus-api',
+        apiVersion: '',
 
         print: {
             materials: {
@@ -12,6 +12,24 @@ export const environment = {
             modelDetails: {
                 get: {
                     url: 'print/model-details',
+                }
+            }
+        },
+
+        shop: {
+            items: {
+                get: {
+                    url: 'shop/items',
+                }
+            },
+            itemCount: {
+                get: {
+                    url: 'shop/item-count',
+                }
+            },
+            modelSignedUrl: {
+                get: {
+                    url: 'shop/item/model-signed-url',
                 }
             }
         }

@@ -1,0 +1,28 @@
+<img [ngSrc]="imageSrc"
+     [ngClass]="imageStyleClass + (allowPreview ? ' preview-image' : '')"
+     [width]="width"
+     [height]="height"
+     (click)="openPreviewImage($event)"
+     [alt]="image.caption">
+
+<ng-template #preview let-preview>
+    <tui-preview>
+        <tui-preview-title *ngIf="image.caption as caption">{{ caption }}</tui-preview-title>
+
+        <div class="position-relative image-content">
+            <img [ngSrc]="previewImageSrc"
+                 [alt]="image.caption"
+                 [ngClass]="previewImageStyleClass"
+                 fill>
+        </div>
+
+        <button
+            icon="tuiIconClose"
+            title="Close"
+            tuiIconButton
+            tuiPreviewAction
+            type="button"
+            (click)="preview.complete()"
+        ></button>
+    </tui-preview>
+</ng-template>

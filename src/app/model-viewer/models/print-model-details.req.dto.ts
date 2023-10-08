@@ -1,4 +1,4 @@
-import {PrintSettingsDto, SupportedMeshFileTypes } from "@printnuts/common";
+import { PrintSettingsDto, SupportedMeshFileTypes } from "@printhaus/common";
 import {
   IsDefined, IsEnum,
   IsMongoId,
