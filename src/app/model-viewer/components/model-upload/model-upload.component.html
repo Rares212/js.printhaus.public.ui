@@ -1,94 +1,101 @@
 <div [class]="styleClass + ' w-100 h-100 haus-card subtle-shadow'">
-        <tui-loader class="h-100 w-100"
-                    [overlay]="true"
-                    [inheritColor]="true"
-                    [showLoader]="(loadingFile$ | async | tuiIsPresent) || loadingPrintDetails">
-            <form [formGroup]="printForm" class="h-100">
-                <div class="d-flex flex-column h-100">
-                    <h4 class="text-center">Load your own model</h4>
+    <tui-loader class="h-100 w-100"
+                [overlay]="true"
+                [inheritColor]="true"
+                [showLoader]="(loadingFile$ | async | tuiIsPresent) || loadingPrintDetails">
+        <form [formGroup]="printForm" class="h-100">
+            <div class="d-flex flex-column h-100">
+                <h4 class="text-center">Load your own model</h4>
 
-                    <tui-input-files class="p-2 h-100"
-                                     size="l"
-                                     *ngIf="!printForm.get(FIELDS.FILE)!.value"
-                                     [formControlName]="FIELDS.FILE"
-                                     [accept]="ACCEPTS_HEADER"
-                                     (reject)="onReject($event)"
-                                     [maxFileSize]="maxFileSize">
-                    </tui-input-files>
+                <tui-input-files class="p-2 h-100"
+                                 size="l"
+                                 *ngIf="!printForm.get(FIELDS.FILE)!.value"
+                                 [formControlName]="FIELDS.FILE"
+                                 [accept]="ACCEPTS_HEADER"
+                                 (reject)="onReject($event)"
+                                 [maxFileSize]="maxFileSize">
+                </tui-input-files>
 
-                    <tui-files class="p-1">
-                        <tui-file
-                            *ngIf="loadedFile$ | async as file"
-                            state="normal"
-                            [file]="file"
-                            [showDelete]="printForm.get(FIELDS.FILE)!.enabled"
-                            (removed)="removeFile()">
-                        </tui-file>
+                <tui-files class="p-1">
+                    <tui-file
+                        *ngIf="loadedFile$ | async as file"
+                        state="normal"
+                        [file]="file"
+                        [showDelete]="printForm.get(FIELDS.FILE)!.enabled"
+                        (removed)="removeFile()">
+                    </tui-file>
 
-                        <tui-file
-                            *ngIf="rejectedFile$ | async as file"
-                            state="error"
-                            [file]="file"
-                            [showDelete]="printForm.get(FIELDS.FILE)!.enabled"
-                            (removed)="clearRejected()">
-                        </tui-file>
-                    </tui-files>
+                    <tui-file
+                        *ngIf="rejectedFile$ | async as file"
+                        state="error"
+                        [file]="file"
+                        [showDelete]="printForm.get(FIELDS.FILE)!.enabled"
+                        (removed)="clearRejected()">
+                    </tui-file>
+                </tui-files>
 
-                    <haus-print-details styleClass="tui-space_vertical-2"
-                                        [@expandCollapse]="(loadedFile$ | async) ? 'expanded' : 'collapsedFully'"
-                                        [printDimensions]="printDimensions"
-                                        [printDetails]="printDetailsResponse$ | async">
-                    </haus-print-details>
+                <haus-print-details styleClass="tui-space_vertical-2"
+                                    [@expandCollapse]="(loadedFile$ | async) ? 'expanded' : 'collapsedFully'"
+                                    [printDimensions]="printDimensions"
+                                    [printDetails]="printDetailsResponse$ | async">
+                </haus-print-details>
 
-                    <haus-model-viewer class="flex-fill min-height-0"
-                                       [@expandCollapse]="(loadedFile$ | async) ? 'expandedFully' : 'collapsedFully'"
-                                       [mesh]="loadedMesh$ | async"
-                                       [materialColor]="printForm.get(FIELDS.MATERIAL)?.value.color"
-                                       [normalScale]="(normalMapScale$ | async) || PRINT_QUALITY_NORMAL_MAP_SCALE[DEFAULT_PRINT_QUALITY]">
-                    </haus-model-viewer>
+                <haus-model-viewer class="flex-fill min-height-0"
+                                   [@expandCollapse]="(loadedFile$ | async) ? 'expandedFully' : 'collapsedFully'"
+                                   [mesh]="loadedMesh$ | async"
+                                   [materialColor]="printForm.get(FIELDS.MATERIAL)?.value.color"
+                                   [normalScale]="(normalMapScale$ | async) || PRINT_QUALITY_NORMAL_MAP_SCALE[DEFAULT_PRINT_QUALITY]">
+                </haus-model-viewer>
 
-                    <div tuiGroup class="group tui-space_vertical-4">
-                        <tui-select [formControlName]="FIELDS.MATERIAL"
-                                    [valueContent]="materialContentShort"
-                                    [tuiTextfieldSize]="isMobile ? 'm' : 'l'">
-                            Material
-                            <tui-data-list-wrapper *tuiDataList
-                                                   [items]="materials" [labels]="materialLabels"
-                                                   [itemContent]="materialContent">
-                            </tui-data-list-wrapper>
-                        </tui-select>
+                <div tuiGroup class="group tui-space_vertical-4">
+                    <tui-select [formControlName]="FIELDS.MATERIAL"
+                                [valueContent]="materialContentShort"
+                                [tuiTextfieldSize]="isMobile ? 'm' : 'l'"
+                                tuiHintDescribe
+                                tuiHint="See ">
+                        Material
+                        <tui-data-list-wrapper *tuiDataList
+                                               [items]="materials" [labels]="materialLabels"
+                                               [itemContent]="materialContent">
+                        </tui-data-list-wrapper>
+                    </tui-select>
 
-                        <tui-select [formControlName]="FIELDS.QUALITY"
-                                    [valueContent]="qualityContent"
-                                    [tuiTextfieldSize]="isMobile ? 'm' : 'l'">
-                            Quality
-                            <tui-data-list-wrapper *tuiDataList
-                                                   [items]="qualityList"
-                                                   [itemContent]="qualityContent">
-                            </tui-data-list-wrapper>
-                        </tui-select>
+                    <tui-select [formControlName]="FIELDS.QUALITY"
+                                [valueContent]="qualityContent"
+                                [tuiTextfieldSize]="isMobile ? 'm' : 'l'"
+                                [tuiHintContent]="qualityHint"
+                                tuiHintAppearance="onDark">
+                        Quality
+                        <tui-data-list-wrapper *tuiDataList
+                                               [items]="qualityList"
+                                               [itemContent]="qualityContent">
+                        </tui-data-list-wrapper>
+                    </tui-select>
 
-                        <tui-select [formControlName]="FIELDS.STRENGTH"
-                                    [valueContent]="strengthContent"
-                                    [tuiTextfieldSize]="isMobile ? 'm' : 'l'">
-                            Strength
-                            <tui-data-list-wrapper *tuiDataList
-                                                   [items]="strengthList"
-                                                   [itemContent]="strengthContent">
-                            </tui-data-list-wrapper>
-                        </tui-select>
-                    </div>
-
-                    <div class="d-flex justify-content-center">
-                        <haus-buy-button *ngIf="(printDetailsResponse$ | async) as printDetails"
-                                         [size]="isMobile ? 'm' : 'l'"
-                                         [unitCost]="printDetails.cost.amount / 100"
-                                         [costCurrency]="printDetails.cost.currency">
-                        </haus-buy-button>
-                    </div>
+                    <tui-select #strengthDropdown
+                                [formControlName]="FIELDS.STRENGTH"
+                                [valueContent]="strengthContent"
+                                [tuiTextfieldSize]="isMobile ? 'm' : 'l'"
+                                [tuiHintContent]="strengthHint"
+                                tuiHintAppearance="onDark">
+                        Strength
+                        <tui-data-list-wrapper *tuiDataList
+                                               [items]="strengthList"
+                                               [itemContent]="strengthContent">
+                        </tui-data-list-wrapper>
+                    </tui-select>
                 </div>
-            </form>
-        </tui-loader>
+
+                <div class="d-flex justify-content-center">
+                    <haus-buy-button *ngIf="(printDetailsResponse$ | async) as printDetails"
+                                     [size]="isMobile ? 'm' : 'l'"
+                                     [unitCost]="printDetails.cost.amount / 100"
+                                     [costCurrency]="printDetails.cost.currency">
+                    </haus-buy-button>
+                </div>
+            </div>
+        </form>
+    </tui-loader>
 </div>
 
 <ng-template #plusIcon>
@@ -127,4 +134,59 @@
     </div>
 </ng-template>
 
+<ng-template #materialsHint>
+    See our <a>materials</a> page
+</ng-template>
+
+<ng-template #strengthHint>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <i class="bi bi-droplet align-middle me-1 align-self-end"></i> <strong>Low:</strong>
+            <div>For decorative items</div>
+            <div>Weight: <span class="text-success">----</span></div>
+            <div>Strength: <span class="text-danger">----</span></div>
+        </li>
+        <li class="list-group-item">
+            <i class="bi bi-box align-middle me-1"></i> <strong>Medium:</strong>
+            <div>For everyday objects</div>
+            <div>Weight: <span class="text-danger">+</span></div>
+            <div>Strength: <span class="text-success">++</span></div>
+        </li>
+        <li class="list-group-item">
+            <i class="bi bi-tools align-middle me-1"></i> <strong>High:</strong>
+            <div>For functional parts</div>
+            <div>Weight: <span class="text-danger">+++</span></div>
+            <div>Strength: <span class="text-success">++++</span></div>
+        </li>
+        <li class="list-group-item">
+            <i class="bi bi-shield-fill align-middle me-1"></i> <strong>Very High:</strong>
+            <div>For heavy-duty applications</div>
+            <div>Weight: <span class="text-danger">+++++</span></div>
+            <div>Strength: <span class="text-success">+++++</span></div>
+        </li>
+    </ul>
+</ng-template>
+
+<ng-template #qualityHint>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <i class="bi bi-gem align-middle me-1"></i> <strong>Detailed:</strong>
+            <div>For intricate designs</div>
+            <div>Resolution: <span class="text-success">+++++</span></div>
+            <div>Print Time: <span class="text-danger">+++++</span></div>
+        </li>
+        <li class="list-group-item">
+            <i class="bi bi-box align-middle me-1"></i> <strong>Normal:</strong>
+            <div>For general use</div>
+            <div>Resolution: <span class="text-success">+++</span></div>
+            <div>Print Time: <span class="text-danger">+</span></div>
+        </li>
+        <li class="list-group-item">
+            <i class="bi bi-wrench-adjustable align-middle me-1"></i> <strong>Prototype:</strong>
+            <div>For quick drafts</div>
+            <div>Resolution: <span class="text-success">+</span></div>
+            <div>Print Time: <span class="text-success">----</span></div>
+        </li>
+    </ul>
+</ng-template>
 

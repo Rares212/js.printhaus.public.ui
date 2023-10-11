@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from "@angular/core";
+import { Component, HostListener, Inject, Input, OnInit } from "@angular/core";
 import { AuthService, User } from "@auth0/auth0-angular";
 import { DOCUMENT } from "@angular/common";
 import { arrow } from "@popperjs/core";
@@ -12,6 +12,8 @@ import { map, tap } from "rxjs";
 })
 export class UserBadgeComponent implements OnInit {
     @Input() size: "m" | "l" | "xl" | "s" | "xs" = "s";
+
+    smallScreenWidth: boolean = window.matchMedia("screen and (max-width:480px)").matches;
 
     user$ = this.authService.user$;
     isAuthenticated$ = this.authService.isAuthenticated$;
@@ -38,5 +40,11 @@ export class UserBadgeComponent implements OnInit {
 
     signup(): void {
         this.authService.loginWithRedirect({ authorizationParams: { screen_hint: "signup" }});
+    }
+
+    // Listen to window resize and change smallScreenWidth accordingly
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        this.smallScreenWidth = window.matchMedia("screen and (max-width:480px)").matches;
     }
 }

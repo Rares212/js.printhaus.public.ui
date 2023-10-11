@@ -1,0 +1,33 @@
+<gallery [items]="galleryImages"
+         thumbPosition="bottom"
+         [resizeDebounceTime]="50"
+         class="w-100 h-100 island-rounding rounded-bottom-1">
+
+    <ng-container *galleryImageDef="let item; let active = active">
+        <haus-image *ngIf="active"
+                    [galleryItem]="item"
+                    imageQuality="original"
+                    [fill]="true"
+                    [shadow]="false"
+                    imageFit="contain"
+                    class="w-100 h-100">
+        </haus-image>
+    </ng-container>
+
+    <ng-container *galleryThumbDef="let item; let type = type">
+        <haus-image *ngIf="type === 'image'"
+                    [galleryItem]="item"
+                    [width]="gallery.config.thumbWidth"
+                    [height]="gallery.config.thumbHeight"
+                    [shadow]="false"
+                    imageQuality="low"
+                    imageFit="cover"
+                    [allowPreview]="false"
+                    class="w-100 h-100">
+        </haus-image>
+    </ng-container>
+</gallery>
+
+<div *galleryImageDef="let image">
+
+</div>

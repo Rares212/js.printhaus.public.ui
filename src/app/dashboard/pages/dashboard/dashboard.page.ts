@@ -3,9 +3,6 @@ import { Engine } from "tsparticles-engine";
 import { loadSlim } from "tsparticles-slim";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SECTIONS_METADATA } from "../../../seo/models/sections.metadata";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
-
-
 
 @Component({
     selector: "app-dashboard",

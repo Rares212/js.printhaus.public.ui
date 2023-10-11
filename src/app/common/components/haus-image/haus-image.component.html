@@ -1,18 +1,26 @@
-<img [ngSrc]="imageSrc"
-     [ngClass]="imageStyleClass + (allowPreview ? ' preview-image' : '')"
+<img *ngIf="fill"
+     [ngSrc]="imageSrc"
+     [ngClass]="imageStyleClassTemplate"
+     fill
+     (click)="openPreviewImage($event)"
+     [alt]="image?.caption">
+
+<img *ngIf="!fill"
+     [ngSrc]="imageSrc"
+     [ngClass]="imageStyleClassTemplate"
      [width]="width"
      [height]="height"
      (click)="openPreviewImage($event)"
-     [alt]="image.caption">
+     [alt]="image?.caption">
 
 <ng-template #preview let-preview>
     <tui-preview>
-        <tui-preview-title *ngIf="image.caption as caption">{{ caption }}</tui-preview-title>
+        <tui-preview-title *ngIf="image?.caption as caption">{{ caption }}</tui-preview-title>
 
         <div class="position-relative image-content">
             <img [ngSrc]="previewImageSrc"
-                 [alt]="image.caption"
-                 [ngClass]="previewImageStyleClass"
+                 [alt]="image?.caption"
+                 [ngClass]="'object-fit-contain ' + previewStyleClassTemplate"
                  fill>
         </div>
 

@@ -4,6 +4,7 @@
 @import 'bootstrap/dist/css/bootstrap.css';
 @import "bootstrap-icons/font/bootstrap-icons.css";
 @import "aos/dist/aos.css";
+@import '@angular/cdk/overlay-prebuilt.css';
 
 .fullscreen {
     height: 100dvh;
@@ -11,7 +12,7 @@
 }
 
 .nut-rotate {
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.4s ease-in-out;
 
     &:hover {
         transform: rotate(90deg) !important;
@@ -103,4 +104,3 @@ max-height-100 {
 .touchable {
     cursor: pointer;
 }
-

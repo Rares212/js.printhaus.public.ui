@@ -18,7 +18,7 @@
                     [iconRight]="arrow"
                     [pseudoActive]="dropdownOpen || null"
                     [size]="size">
-                My account
+                {{smallScreenWidth ? '' : 'My account'}}
             </button>
         </div>
     </tui-loader>

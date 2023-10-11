@@ -42,7 +42,7 @@
                                                   [reducedPrice]="item.reducedCostAmount / 100"
                                                   [currency]="item.costCurrency">
                             </haus-price-indicator>
-                            <haus-buy-button [unitCost]="item.costAmount / 100"
+                            <haus-buy-button [unitCost]="(item.reducedCostAmount ? item.reducedCostAmount : item.costAmount) / 100"
                                              [costCurrency]="item.costCurrency"
                                              (click)="$event.stopPropagation();"
                                              class="tui-space_top-2"

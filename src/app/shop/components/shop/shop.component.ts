@@ -91,7 +91,7 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
                         page: this.activePage(),
                         pageSize: this.visibleItemCount(),
                         sortBy: 'viewPriority',
-                        sortDirection: 'ASC',
+                        sortDirection: 'DESC',
                     })
                 });
             }),
@@ -131,7 +131,7 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
             new PolymorpheusComponent(DetailedItemViewComponent, this.injector), {
                 dismissible: true,
                 closeable: true,
-                size: 'auto',
+                size: 'l',
                 data: item,
             }
         ).subscribe();

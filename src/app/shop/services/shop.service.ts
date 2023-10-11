@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { PaginatedRequestDto, ShopItemDto } from "@printhaus/common";
+import { ModelInfoRespDto, PaginatedRequestDto, ShopItemDto } from "@printhaus/common";
 import { environment } from "../../../environments/environment";
 import { plainToClass } from "class-transformer";
 import { buildUrlPath } from "../../common/util/http.util";
@@ -34,24 +34,13 @@ export class ShopService {
         return this.http.get<number>(apiUrl);
     }
 
-    public getModelSignedUrl(shopItemId: string): Observable<SignedUrlResponse> {
+    public getModelSignedUrl(shopItemId: string): Observable<ModelInfoRespDto> {
         const apiUrl: string = buildUrlPath(environment.printhausApi.rootUrl,
             environment.printhausApi.shop.modelSignedUrl.get.url,
             environment.printhausApi.apiVersion);
 
         const params = new HttpParams().set("id", shopItemId);
 
-        // change http to get text instead of json
-        return this.http.get<string>(apiUrl, { params, responseType: "text" as "json" }).pipe(
-            map(url => {
-                const fileType: string = 'stl'
-                return { url, fileType };
-            })
-        );
+        return this.http.get<ModelInfoRespDto>(apiUrl, { params });
     }
-}
-
-export interface SignedUrlResponse {
-    url: string;
-    fileType: string;
 }

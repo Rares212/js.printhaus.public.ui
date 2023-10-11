@@ -5,11 +5,12 @@ import { PRINT_QUALITY_NORMAL_MAP_SCALE, PrintQuality, ShopItemDto } from "@prin
 import { ShopService } from "../../services/shop.service";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { MeshProcessingService } from "../../../model-viewer/services/mesh-processing.service";
-import { catchError, finalize, map, Observable, startWith, switchMap, tap } from "rxjs";
+import { catchError, finalize, map, Observable, shareReplay, startWith, switchMap, tap } from "rxjs";
 import { Mesh } from "three";
 import { DEFAULT_PRINT_QUALITY } from "../../../model-viewer/util/model-viewer.constants";
 import { TuiPreviewDialogService } from "@taiga-ui/addon-preview";
 import { FormControl } from "@angular/forms";
+import { GalleryItem, ImageItem } from "ng-gallery";
 
 @Component({
     selector: "haus-detailed-item-view",
@@ -30,6 +31,8 @@ export class DetailedItemViewComponent implements OnInit {
     modelMesh$: Observable<Mesh>;
     loadingMesh$: Observable<boolean>;
 
+    images: GalleryItem[] = [];
+
     constructor(@Inject(POLYMORPHEUS_CONTEXT)
                 private readonly context: TuiDialogContext<any, any>,
                 @Inject(TuiPreviewDialogService)
@@ -42,16 +45,18 @@ export class DetailedItemViewComponent implements OnInit {
         this.product = this.context.data;
         this.modelMesh$ = this.shopItemService.getModelSignedUrl(this.product.id).pipe(
             switchMap(resp => {
-                return this.meshProcessingService.parseUrl(resp.url, resp.fileType)
+                return this.meshProcessingService.parseUrl(resp.signedUrl, resp.fileExtension, resp.compressed);
             }),
+            shareReplay(1)
         );
         this.loadingMesh$ = this.modelMesh$.pipe(
             map(() => false),
             startWith(true),
-            finalize(() => false));
+            finalize(() => false)
+        );
 
-        this.loadingMesh$.subscribe(
-            (loading) => console.log(`loading mesh: ${loading}`)
-        )
+        this.images = this.product.galleryPhotos.map(image => {
+            return new ImageItem({src: image.largeImageUrl, thumb: image.smallImageUrl, alt: this.product.name});
+        });
     }
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { SECTIONS_METADATA } from "../../../seo/models/sections.metadata";
 import { IsActiveMatchOptions } from "@angular/router";
+import { STATIC_ASSET_PATHS } from "../../../../assets/static/static-asset.keys";
 
 @Component({
   selector: 'nut-toolbar',
@@ -16,4 +17,5 @@ export class NutToolbarComponent {
     }
 
     protected readonly SECTIONS_METADATA = SECTIONS_METADATA;
+  protected readonly STATIC_ASSET_PATHS = STATIC_ASSET_PATHS;
 }

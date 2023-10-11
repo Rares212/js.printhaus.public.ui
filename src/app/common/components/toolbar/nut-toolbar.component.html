@@ -3,14 +3,12 @@
                              justify-content-start align-items-center flex-grow-0">
         <h3 class="d-none d-sm-flex flex-row align-items-center m-0 touchable"
             [routerLink]="SECTIONS_METADATA.dashboard.path" [fragment]="SECTIONS_METADATA.dashboard.fragment">
-            <div class="nut-rotate mx-1">
-                <i class="bi bi-nut nut-rotate"></i>
-            </div>
+            <img [ngSrc]="STATIC_ASSET_PATHS.logoPng" [width]="48" [height]="48">
             Printhaus
         </h3>
         <h3 class="d-flex d-sm-none mx-1 mb-0 align-items-center justify-content-center touchable"
             [routerLink]="SECTIONS_METADATA.dashboard.path" [fragment]="SECTIONS_METADATA.dashboard.fragment">
-            <i class="bi bi-nut nut-rotate"></i>
+            <img [ngSrc]="STATIC_ASSET_PATHS.logoPng" [width]="48" [height]="48">
         </h3>
     </div>
 
@@ -55,11 +53,10 @@
             </button>
 
         </tui-tabs-with-more>
-
     </div>
 
     <div #rightToolbar class="flex-grow-0 d-flex justify-content-center">
-        <haus-user-badge class="mx-3">
+        <haus-user-badge class="mx-3" size="s">
 
         </haus-user-badge>
     </div>
@@ -67,6 +64,5 @@
 </div>
 
 <ng-template #dropdownIcon>
-<!--    <i class="bi bi-list"></i>-->
     <tui-svg src="tuiIconMoreHorizontalLarge"></tui-svg>
 </ng-template>

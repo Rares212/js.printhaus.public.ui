@@ -51,6 +51,7 @@ import { PriceIndicatorComponent } from './components/price-indicator/price-indi
 import { RatingIndicatorComponent } from './components/rating-indicator/rating-indicator.component';
 import { HausImageComponent } from './components/haus-image/haus-image.component';
 import { TuiPreviewModule } from "@taiga-ui/addon-preview";
+import { HausGalleryComponent } from "../gallery/components/gallery/haus-gallery.component";
 
 @NgModule({
     declarations: [
@@ -61,7 +62,7 @@ import { TuiPreviewModule } from "@taiga-ui/addon-preview";
         MaterialTagComponent,
         PriceIndicatorComponent,
         RatingIndicatorComponent,
-        HausImageComponent
+        HausImageComponent,
     ],
     exports: [
         CommonModule,
@@ -126,7 +127,7 @@ import { TuiPreviewModule } from "@taiga-ui/addon-preview";
         MaterialTagComponent,
         PriceIndicatorComponent,
         RatingIndicatorComponent,
-        HausImageComponent
+        HausImageComponent,
     ],
     imports: [
         CommonModule,
@@ -150,7 +151,7 @@ import { TuiPreviewModule } from "@taiga-ui/addon-preview";
         TuiMobileTabsModule,
         TuiRatingModule,
         NgOptimizedImage,
-        TuiPreviewModule
+        TuiPreviewModule,
     ]
 })
 export class NutCommonModule {

@@ -5,7 +5,7 @@ import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { TuiFileLike } from "@taiga-ui/kit";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { getFileType } from "../../common/util/common.util";
-import { gzipSync } from "fflate";
+import { gunzip, gunzipSync, gzipSync } from "fflate";
 import { HttpClient } from "@angular/common/http";
 import { mergeBufferGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
 import { PrintModelDetailsReqDto } from "../models/print-model-details.req.dto";
@@ -62,20 +62,31 @@ export class MeshProcessingService {
 
     public parseUrl(url: string,
                     fileType: string,
+                    compressed: boolean,
                     material: Material = this.defaultMaterial,
                     centered: boolean = true): Observable<Mesh> {
+        // Get the file from the url. If compressed, use gunzip to decompress the file.
+        // If not, process the file directly
+
+        let file$: Observable<ArrayBuffer> = this.httpClient.get(url, { responseType: "arraybuffer" });
+        if (compressed) {
+            file$ = file$.pipe(
+                map(buffer => gunzipSync(new Uint8Array(buffer))),
+                map(buffer => buffer.buffer)
+            );
+        }
+
         switch (fileType.toLowerCase()) {
             case SupportedMeshFileTypes.STL: {
-                return from(this.stlLoader.loadAsync(url)).pipe(
+                return file$.pipe(
+                    map(fileBuffer => this.stlLoader.parse(fileBuffer)),
                     map(buffer => this.meshFromGeometry(buffer, material, centered))
                 );
             }
             case SupportedMeshFileTypes.OBJ: {
-                return from(this.objLoader.loadAsync(url)).pipe(
-                    map(buffer => {
-                        const geometry = this.combineMeshes(buffer);
-                        return this.meshFromGeometry(geometry, material, centered);
-                    })
+                return file$.pipe(
+                    map(fileBuffer => this.stlLoader.parse(fileBuffer)),
+                    map(buffer => this.meshFromGeometry(buffer, material, centered))
                 );
             }
             default: {

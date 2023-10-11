@@ -6,8 +6,7 @@ import { TuiElasticContainerModule, TuiPaginationModule } from "@taiga-ui/kit";
 import { DetailedItemViewComponent } from './components/detailed-item-view/detailed-item-view.component';
 import { TuiPreviewModule } from "@taiga-ui/addon-preview";
 import { ModelViewerModule } from "../model-viewer/model-viewer.module";
-
-
+import { HausGalleryModule } from "../gallery/haus-gallery.module";
 
 @NgModule({
     declarations: [
@@ -23,7 +22,8 @@ import { ModelViewerModule } from "../model-viewer/model-viewer.module";
     TuiPaginationModule,
     TuiElasticContainerModule,
     TuiPreviewModule,
-    ModelViewerModule
+    ModelViewerModule,
+    HausGalleryModule
   ]
 })
 export class ShopModule { }
