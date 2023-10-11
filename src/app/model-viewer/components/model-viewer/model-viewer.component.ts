@@ -29,7 +29,6 @@ import {
     WebGLRenderer
 } from "three";
 import { isNonNull, removeAllFromScene } from "../../../common/util/common.util";
-import { Geometry } from "three/examples/jsm/deprecated/Geometry";
 import { DEFAULT_PRINT_QUALITY } from "../../util/model-viewer.constants";
 import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader";
 import { PRINT_QUALITY_NORMAL_MAP_SCALE } from "@printhaus/common";

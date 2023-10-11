@@ -3,14 +3,11 @@ import {POLYMORPHEUS_CONTEXT} from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from "@taiga-ui/core";
 import { PRINT_QUALITY_NORMAL_MAP_SCALE, PrintQuality, ShopItemDto } from "@printhaus/common";
 import { ShopService } from "../../services/shop.service";
-import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { MeshProcessingService } from "../../../model-viewer/services/mesh-processing.service";
-import { catchError, finalize, map, Observable, shareReplay, startWith, switchMap, tap } from "rxjs";
-import { Mesh } from "three";
-import { DEFAULT_PRINT_QUALITY } from "../../../model-viewer/util/model-viewer.constants";
+import { finalize, map, Observable, shareReplay, startWith, switchMap, tap } from "rxjs";
 import { TuiPreviewDialogService } from "@taiga-ui/addon-preview";
-import { FormControl } from "@angular/forms";
 import { GalleryItem, ImageItem } from "ng-gallery";
+import { Mesh } from "three";
 
 @Component({
     selector: "haus-detailed-item-view",

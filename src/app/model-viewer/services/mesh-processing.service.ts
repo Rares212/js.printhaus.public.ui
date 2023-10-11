@@ -1,27 +1,28 @@
 import { Injectable } from "@angular/core";
-import { BufferGeometry, Group, Material, Matrix4, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
 import { from, map, Observable, of, switchMap } from "rxjs";
-import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { TuiFileLike } from "@taiga-ui/kit";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { getFileType } from "../../common/util/common.util";
 import { gunzip, gunzipSync, gzipSync } from "fflate";
 import { HttpClient } from "@angular/common/http";
-import { mergeBufferGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
 import { PrintModelDetailsReqDto } from "../models/print-model-details.req.dto";
 import { buildUrlPath } from "../../common/util/http.util";
 import { environment } from "../../../environments/environment";
-import { PrintModelDetailsRespDto, PrintSettingsDto, SupportedMeshFileTypes } from "@printhaus/common";
+import {
+    MeshParserService, PrintDimensionsDto,
+    PrintModelDetailsRespDto,
+    PrintSettingsDto,
+    SupportedMeshFileTypes
+} from "@printhaus/common";
+import { BufferGeometry, Material, Matrix4, Mesh, MeshStandardMaterial, Vector3 } from "three";
 
 @Injectable({
     providedIn: "root"
 })
 export class MeshProcessingService {
 
-    public readonly ACCEPTED_FILE_TYPES: string[] = ["stl", "obj"];
     public readonly ACCEPTS_HEADER: string;
-    private stlLoader: STLLoader = new STLLoader();
-    private objLoader: OBJLoader = new OBJLoader();
+
+    private meshParser: MeshParserService = new MeshParserService();
 
     private defaultMaterial: Material = new MeshStandardMaterial({
         color: 0x808080, // gray color
@@ -31,7 +32,7 @@ export class MeshProcessingService {
 
     constructor(private httpClient: HttpClient) {
         this.ACCEPTS_HEADER = "";
-        for (const fileType of this.ACCEPTED_FILE_TYPES) {
+        for (const fileType of Object.values(SupportedMeshFileTypes)) {
             this.ACCEPTS_HEADER += "." + fileType + ",";
         }
     }
@@ -40,24 +41,11 @@ export class MeshProcessingService {
                      material: Material = this.defaultMaterial,
                      centered: boolean = true): Observable<Mesh> {
 
-        const fileType: string = getFileType(file.name)!;
-        switch (fileType.toLowerCase()) {
-            case SupportedMeshFileTypes.STL: {
-                return from((file as File).arrayBuffer()).pipe(
-                    map(buffer => this.parseStl(buffer)),
-                    map(buffer => this.meshFromGeometry(buffer, material!, centered))
-                );
-            }
-            case SupportedMeshFileTypes.OBJ: {
-                return from((file as File).arrayBuffer()).pipe(
-                    map(buffer => this.parseObj(buffer)),
-                    map(buffer => this.meshFromGeometry(buffer, material!, centered))
-                );
-            }
-            default: {
-                throw new Error("Error parsing mesh file");
-            }
-        }
+        const fileType: SupportedMeshFileTypes = getFileType(file.name) as SupportedMeshFileTypes;
+        return from((file as File).arrayBuffer()).pipe(
+            map(buffer => this.meshParser.parseFile(buffer, fileType)),
+            map(buffer => this.meshFromGeometry(buffer, material, centered))
+        );
     }
 
     public parseUrl(url: string,
@@ -76,23 +64,10 @@ export class MeshProcessingService {
             );
         }
 
-        switch (fileType.toLowerCase()) {
-            case SupportedMeshFileTypes.STL: {
-                return file$.pipe(
-                    map(fileBuffer => this.stlLoader.parse(fileBuffer)),
-                    map(buffer => this.meshFromGeometry(buffer, material, centered))
-                );
-            }
-            case SupportedMeshFileTypes.OBJ: {
-                return file$.pipe(
-                    map(fileBuffer => this.stlLoader.parse(fileBuffer)),
-                    map(buffer => this.meshFromGeometry(buffer, material, centered))
-                );
-            }
-            default: {
-                throw new Error("Error parsing mesh file");
-            }
-        }
+        return file$.pipe(
+            map(buffer => this.meshParser.parseFile(buffer, fileType as SupportedMeshFileTypes)),
+            map(buffer => this.meshFromGeometry(buffer, material, centered))
+        );
     }
 
     public getModelDetails(file: TuiFileLike, materialId: string, printSettings: PrintSettingsDto): Observable<PrintModelDetailsRespDto> {
@@ -117,6 +92,14 @@ export class MeshProcessingService {
         );
     }
 
+    public getPrintBedDimensions(): Observable<PrintDimensionsDto> {
+        const apiUrl = buildUrlPath(environment.printhausApi.rootUrl,
+                                           environment.printhausApi.apiVersion,
+                                           environment.printhausApi.print.printBedDimensions.get.url);
+
+        return this.httpClient.get<PrintDimensionsDto>(apiUrl);
+    }
+
     private meshFromGeometry(geometry: BufferGeometry, material: Material, centered: boolean): Mesh {
         const mesh: Mesh = new Mesh(geometry, material);
 
@@ -135,25 +118,4 @@ export class MeshProcessingService {
 
         return mesh;
     }
-
-    private parseStl(buffer: ArrayBuffer): BufferGeometry {
-        return this.stlLoader.parse(buffer);
-    }
-
-    private parseObj(buffer: ArrayBuffer): BufferGeometry {
-        const group: Group = this.objLoader.parse(new Uint8Array(buffer).toString());
-        return this.combineMeshes(group);
-    }
-
-    private combineMeshes(group: Group): BufferGeometry {
-        const geometries: BufferGeometry[] = [];
-        group.traverse((child: Object3D) => {
-            if (child instanceof Mesh) {
-                geometries.push(child.geometry);
-            }
-        });
-
-        return mergeBufferGeometries(geometries, true);
-    }
-
 }

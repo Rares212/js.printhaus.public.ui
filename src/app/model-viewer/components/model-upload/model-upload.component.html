@@ -16,6 +16,8 @@
                                  [maxFileSize]="maxFileSize">
                 </tui-input-files>
 
+                <h3 *ngIf="objectFitsInPrintBed$ | async"></h3>
+
                 <tui-files class="p-1">
                     <tui-file
                         *ngIf="loadedFile$ | async as file"
@@ -37,22 +39,25 @@
                 <haus-print-details styleClass="tui-space_vertical-2"
                                     [@expandCollapse]="(loadedFile$ | async) ? 'expanded' : 'collapsedFully'"
                                     [printDimensions]="printDimensions"
-                                    [printDetails]="printDetailsResponse$ | async">
+                                    [printDetails]="printDetailsResponse$ | async"
+                                    [fitsOnPrintBed]="objectFitsInPrintBed$ | async"
+                                    [printBedDimensions]="printBedSize">
                 </haus-print-details>
 
                 <haus-model-viewer class="flex-fill min-height-0"
                                    [@expandCollapse]="(loadedFile$ | async) ? 'expandedFully' : 'collapsedFully'"
                                    [mesh]="loadedMesh$ | async"
                                    [materialColor]="printForm.get(FIELDS.MATERIAL)?.value.color"
-                                   [normalScale]="(normalMapScale$ | async) || PRINT_QUALITY_NORMAL_MAP_SCALE[DEFAULT_PRINT_QUALITY]">
+                                   [normalScale]="(normalMapScale$ | async) || PRINT_QUALITY_NORMAL_MAP_SCALE[DEFAULT_PRINT_QUALITY]"
+                                   [gridSize]="printBedSize.width" [gridDivisions]="printBedSize.width / 10">
                 </haus-model-viewer>
 
                 <div tuiGroup class="group tui-space_vertical-4">
                     <tui-select [formControlName]="FIELDS.MATERIAL"
                                 [valueContent]="materialContentShort"
                                 [tuiTextfieldSize]="isMobile ? 'm' : 'l'"
-                                tuiHintDescribe
-                                tuiHint="See ">
+                                [tuiHintContent]="materialsHint"
+                                tuiHintAppearance="onDark">
                         Material
                         <tui-data-list-wrapper *tuiDataList
                                                [items]="materials" [labels]="materialLabels"

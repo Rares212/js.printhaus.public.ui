@@ -13,6 +13,11 @@ export const environment = {
                 get: {
                     url: 'print/model-details',
                 }
+            },
+            printBedDimensions: {
+                get: {
+                    url: 'print/print-bed-dimensions',
+                }
             }
         },
 

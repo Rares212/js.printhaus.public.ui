@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { Vector3 } from "three";
 import { FormControl } from "@angular/forms";
-import { PrintModelDetailsRespDto } from "@printhaus/common";
+import { PrintDimensionsDto, PrintModelDetailsRespDto } from "@printhaus/common";
 
 @Component({
     selector: "haus-print-details",
@@ -15,6 +15,8 @@ export class PrintDetailsComponent implements OnChanges {
     @Input() styleClass: string = '';
     @Input() printDimensions: Vector3 | null;
     @Input() printDetails: PrintModelDetailsRespDto | null;
+    @Input() fitsOnPrintBed: boolean | null;
+    @Input() printBedDimensions: PrintDimensionsDto;
 
     protected costChartLabels: string[] = [];
     protected costChartValues: number[] = [];

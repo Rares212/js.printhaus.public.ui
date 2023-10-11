@@ -3,11 +3,17 @@
         <p class="text-nowrap">
             {{(printDimensions.x | number:'1.0-0') + ' x ' + (printDimensions.y | number:'1.0-0') + ' x ' + (printDimensions.z | number:'1.0-0') + ' mm'}}
         </p>
-        <div *ngIf="printDetails" class="tui-space_top-3 ">
+        <div *ngIf="printDetails" class="tui-space_top-3 d-flex flex-row">
             <label tuiLabel="Show cost info">
                 <tui-toggle size="l" [formControl]="showCostInfoControl">
                 </tui-toggle>
             </label>
+            <tui-tooltip appearance="onDark"
+                         direction="bottom"
+                         class="label-tooltip"
+
+                         [content]="costInfoHint">
+            </tui-tooltip>
         </div>
 
         <tui-ring-chart *ngIf="printDetails && showCostInfoControl.value"
@@ -19,30 +25,59 @@
             </tui-money>
             <div>{{ label }}</div>
         </tui-ring-chart>
-
     </div>
 
-    <div *ngIf="printDetails" #printData class="d-flex flex-column flex-sm-row justify-content-end flex-wrap">
-        <div class="tui-space_horizontal-2">
-            <label tuiLabel="Cost">
-                <tui-money [currency]="printDetails.cost.currency"
-                           [value]="printDetails.cost.amount / 100"
-                           [colored]="false">
-                </tui-money>
-            </label>
+    <div #rightDetails>
+        <div *ngIf="printDetails" class="d-flex flex-column flex-sm-row justify-content-end flex-wrap">
+            <div class="tui-space_horizontal-2">
+                <label tuiLabel="Cost">
+                    <tui-money [currency]="printDetails.cost.currency"
+                               [value]="printDetails.cost.amount / 100"
+                               [colored]="false">
+                    </tui-money>
+                </label>
+            </div>
+
+            <div class="tui-space_horizontal-2">
+                <label tuiLabel="Weight">
+                    {{(printDetails.grams | number:'1.0-0') + 'g'}}
+                </label>
+            </div>
+
+            <div class="tui-space_horizontal-2">
+                <label tuiLabel="Print time" class="text-nowrap">
+                    {{(printDetails.estimatedPrintTimeHours | hourToTime) + 'h'}}
+                </label>
+            </div>
         </div>
 
-        <div class="tui-space_horizontal-2">
-            <label tuiLabel="Weight">
-                {{(printDetails.grams | number:'1.0-0') + 'g'}}
-            </label>
+        <div *ngIf="fitsOnPrintBed === false">
+            <tui-tag size="l"
+                     status="error"
+                     value="Object too large!"
+                     [tuiHint]="printDimensionsHint">
+
+            </tui-tag>
         </div>
 
-        <div class="tui-space_horizontal-2">
-            <label tuiLabel="Print time" class="text-nowrap">
-                {{(printDetails.estimatedPrintTimeHours | hourToTime) + 'h'}}
-            </label>
-        </div>
     </div>
 
 </div>
+
+<ng-template #printDimensionsHint>
+    <p>The maximum allowed dimensions are: {{(printBedDimensions?.width | number:'1.0-0') + ' x ' + (printBedDimensions?.depth | number:'1.0-0') + ' x ' + (printBedDimensions?.height | number:'1.0-0') + ' mm'}}</p>
+    <p>We validate the object size by rotating it at 90° intervals and checking if it fits</p>
+    <p>Please try reducing the object scale or rotating it manually before uploading</p>
+</ng-template>
+
+<ng-template #costInfoHint>
+    <ul class="list-group list-group-flush">
+        <ng-container *ngFor="let costPart of printDetails?.printCostParts">
+            <li class="list-group-item">
+                <strong>{{costPart.reason}}</strong>
+                <div>{{costPart.details}}</div>
+            </li>
+        </ng-container>
+    </ul>
+
+</ng-template>

@@ -1,5 +1,4 @@
 import { Component, Inject, Input, OnInit } from "@angular/core";
-import { Box3, Mesh, Vector3 } from "three";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { catchError, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap, tap } from "rxjs";
 import { TuiFileLike } from "@taiga-ui/kit";
@@ -7,7 +6,6 @@ import { MeshStore } from "../../stores/mesh.store";
 import { MeshProcessingService } from "../../services/mesh-processing.service";
 import { PrintUploadFormFields } from "./print-settings-options.enum";
 import { MaterialService } from "../../services/material.service";
-import { isDark, isNonNull } from "../../../common/util/common.util";
 import { DEFAULT_PRINT_QUALITY, DEFAULT_PRINT_STRENGTH } from "../../util/model-viewer.constants";
 import { tuiIsMobile } from "@taiga-ui/core";
 import { TUI_IS_MOBILE } from "@taiga-ui/cdk";
@@ -16,8 +14,9 @@ import {
     PrintModelDetailsRespDto,
     PRINT_QUALITY_NORMAL_MAP_SCALE,
     PrintQuality,
-    PrintMaterialDto, PrintStrength, PrintSettingsDto
+    PrintMaterialDto, PrintStrength, PrintSettingsDto, CommonMeshService, PrintDimensionsDto
 } from "@printhaus/common";
+import { Box3, Mesh, Vector3 } from "three";
 
 @Component({
     selector: "haus-model-upload",
@@ -64,19 +63,21 @@ import {
 export class ModelUploadComponent implements OnInit {
     protected readonly ACCEPTS_HEADER: string = this.meshProcessingService.ACCEPTS_HEADER;
     protected readonly FIELDS = PrintUploadFormFields;
-    protected readonly isNonNull = isNonNull;
-    protected readonly isDark = isDark;
     protected readonly PRINT_QUALITY_NORMAL_MAP_SCALE = PRINT_QUALITY_NORMAL_MAP_SCALE;
     protected readonly DEFAULT_PRINT_QUALITY = DEFAULT_PRINT_QUALITY;
+
+    private readonly commonMeshService: CommonMeshService = new CommonMeshService();
 
     @Input() styleClass: string = "";
     @Input() maxFileSize: number = 64 * 1000 * 1000; // 64 MB
 
+    printBedSize: PrintDimensionsDto = new PrintDimensionsDto(200, 200, 200);
+
     rejectedFile$ = new Subject<TuiFileLike | null>();
     loadingFile$: Observable<TuiFileLike | null>;
     loadedFile$: Observable<TuiFileLike | null>;
-
     loadedMesh$: Observable<Mesh | null>;
+    objectFitsInPrintBed$: Observable<boolean | null>;
 
     printDetailsResponse$: Observable<PrintModelDetailsRespDto | null>;
     loadingPrintDetails: boolean = false;
@@ -104,7 +105,9 @@ export class ModelUploadComponent implements OnInit {
         this.bindFileChanges();
         this.bindFormCompletion();
         this.bindQualityToNormalMapChanges();
+        this.bindObjectFitsInPrintBed();
         this.loadMaterials();
+        this.loadPrintBedDimensions();
     }
 
     private buildSettingsFormGroup(): void {
@@ -168,6 +171,22 @@ export class ModelUploadComponent implements OnInit {
         )
     }
 
+    private bindObjectFitsInPrintBed(): void {
+        this.objectFitsInPrintBed$ = this.loadedMesh$.pipe(
+            map(mesh => {
+                if (mesh) {
+                    return this.commonMeshService.fitsInPrintBed(mesh.geometry,
+                                                                 this.printBedSize.width,
+                                                                 this.printBedSize.depth,
+                                                                 this.printBedSize.height);
+                } else {
+                    return null;
+                }
+            }),
+            tap(fits => console.log(`Fits in print bed: ${fits}`))
+        );
+    }
+
     private loadMaterials(): void {
         this.materialService.getMaterialsGrouped().subscribe(
             materials => {
@@ -175,6 +194,14 @@ export class ModelUploadComponent implements OnInit {
                     this.materialLabels.push(key);
                     this.materials.push(materials.get(key)!);
                 }
+            }
+        );
+    }
+
+    private loadPrintBedDimensions(): void {
+        this.meshProcessingService.getPrintBedDimensions().subscribe(
+            dimensions => {
+                this.printBedSize = dimensions;
             }
         );
     }
